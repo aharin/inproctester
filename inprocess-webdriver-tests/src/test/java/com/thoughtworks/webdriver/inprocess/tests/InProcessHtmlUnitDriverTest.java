@@ -1,22 +1,16 @@
 package com.thoughtworks.webdriver.inprocess.tests;
 
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.thoughtworks.webdriver.inprocess.testapp.TestServlet;
 import com.thoughworks.webdriver.inprocess.HttpAppTester;
 import com.thoughworks.webdriver.inprocess.InProcessHtmlUnitDriver;
-import com.thoughworks.webdriver.inprocess.InProcessWebConnection;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
-
-
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import org.junit.*;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 public class InProcessHtmlUnitDriverTest {
 
@@ -36,25 +30,16 @@ public class InProcessHtmlUnitDriverTest {
         httpAppTester.stop();
     }
 
-    @Test
-    public void shouldTestWithWebClient() throws Exception {
-        WebClient webClient = new WebClient();
-        webClient.setWebConnection(new InProcessWebConnection(webClient, httpAppTester));
-
-        final HtmlPage page = webClient.getPage("http://localhost/test/a");
-        System.out.println("page = " + page.getWebResponse().getContentAsString());
-
-    }
 
     @Test
-    public void shouldTestWithWebDriverClient() throws Exception {
+    public void shouldTestGetRequest() throws Exception {
 
         HtmlUnitDriver htmlUnitDriver = new InProcessHtmlUnitDriver(httpAppTester);
 
         htmlUnitDriver.get("http://localhost/test/a");
-        System.out.println("htmlUnitDriver.getTitle() = " + htmlUnitDriver.getTitle());
 
-        System.out.println("body.getText() = " + htmlUnitDriver.getPageSource());
+        assertThat(htmlUnitDriver.getTitle(), is("Hello"));
+        assertThat(htmlUnitDriver.findElement(By.tagName("body")).getText(), is("Hello"));
 
     }
 
