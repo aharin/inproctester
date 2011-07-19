@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="inprocess-webdriver-tests:war">
+    <output-path>$PROJECT_DIR$/inprocess-webdriver-tests/target</output-path>
+    <root id="archive" name="inprocess-webdriver-tests-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="inprocess-webdriver-tests:war exploded" />
+    </root>
+  </artifact>
+</component>
