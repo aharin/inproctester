@@ -19,9 +19,7 @@ public class InProcessHtmlUnitDriverTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-//        httpAppTester = new HttpAppTester("./src/main/webapp", "/");
-        httpAppTester = new HttpAppTester();
-        httpAppTester.addServlet(TestServlet.class, "/test/*");
+        httpAppTester = new HttpAppTester("./src/main/webapp", "/");
         httpAppTester.start();
     }
 
@@ -38,8 +36,8 @@ public class InProcessHtmlUnitDriverTest {
 
         htmlUnitDriver.get("http://localhost/test/a");
 
-        assertThat(htmlUnitDriver.getTitle(), is("Hello"));
-        assertThat(htmlUnitDriver.findElement(By.tagName("body")).getText(), is("Hello"));
+        assertThat(htmlUnitDriver.getTitle(), is("Test Application"));
+        assertThat(htmlUnitDriver.findElement(By.className("message")).getText(), is("Hello"));
 
     }
 

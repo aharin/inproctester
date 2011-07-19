@@ -15,7 +15,10 @@ public class TestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         resp.setCharacterEncoding("UTF-8");
-        resp.getWriter().print("<html><head><title>Hello</title></head><body>" + message + "</body></html>");
+
+
+        req.setAttribute("message", "Hello");
+        getServletContext().getRequestDispatcher("/test.ftl").forward(req, resp);
     }
 }
 
