@@ -13,6 +13,10 @@
             <param-name>TemplatePath</param-name>
             <param-value>/WEB-INF/ftl/</param-value>
         </init-param>
+        <init-param>
+            <param-name>template_exception_handler</param-name>
+            <param-value>rethrow</param-value>
+        </init-param>
     </servlet>
 
     <servlet>
