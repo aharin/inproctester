@@ -1,8 +1,7 @@
 package com.thoughtworks.webdriver.inprocess.tests;
 
-import com.thoughtworks.webdriver.inprocess.testapp.TestServlet;
-import com.thoughworks.webdriver.inprocess.HttpAppTester;
-import com.thoughworks.webdriver.inprocess.InProcessHtmlUnitDriver;
+import com.thoughtworks.webdriver.inprocess.HttpAppTester;
+import com.thoughtworks.webdriver.inprocess.InProcessHtmlUnitDriver;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -37,7 +36,7 @@ public class InProcessHtmlUnitDriverTest {
         htmlUnitDriver.get("http://localhost/test/a");
 
         assertThat(htmlUnitDriver.getTitle(), is("Test Application"));
-        assertThat(htmlUnitDriver.findElement(By.className("message")).getText(), is("Hello"));
+        assertThat(htmlUnitDriver.findElement(By.tagName("h3")).getText(), is("Contact Details"));
 
     }
 

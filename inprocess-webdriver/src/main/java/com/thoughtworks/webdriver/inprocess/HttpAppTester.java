@@ -1,4 +1,4 @@
-package com.thoughworks.webdriver.inprocess;
+package com.thoughtworks.webdriver.inprocess;
 
 import org.eclipse.jetty.server.LocalConnector;
 import org.eclipse.jetty.server.Server;

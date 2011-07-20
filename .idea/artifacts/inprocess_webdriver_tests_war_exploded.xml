@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="inprocess-webdriver-tests:war exploded">
+  <artifact type="exploded-war" build-on-make="true" name="inprocess-webdriver-tests:war exploded">
     <output-path>$PROJECT_DIR$/inprocess-webdriver-tests/target/inprocess-webdriver-tests-1.0-SNAPSHOT</output-path>
     <root id="root">
       <element id="javaee-facet-resources" facet="inprocess-webdriver-tests/web/Web" />

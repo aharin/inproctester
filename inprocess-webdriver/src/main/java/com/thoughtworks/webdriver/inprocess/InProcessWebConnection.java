@@ -1,4 +1,4 @@
-package com.thoughworks.webdriver.inprocess;
+package com.thoughtworks.webdriver.inprocess;
 
 import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;

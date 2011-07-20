@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class TestServlet extends HttpServlet {
 
-    public static String message = "Hello";
+    public static Contact contact = new Contact();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -17,7 +17,7 @@ public class TestServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
 
 
-        req.setAttribute("message", "Hello");
+        req.setAttribute("contact", contact);
         getServletContext().getRequestDispatcher("/test.ftl").forward(req, resp);
     }
 }
