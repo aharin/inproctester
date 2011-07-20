@@ -9,6 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.text.IsEmptyString.isEmptyString;
 import static org.junit.Assert.assertThat;
 
 public class InProcessHtmlUnitDriverTest {
@@ -37,6 +38,7 @@ public class InProcessHtmlUnitDriverTest {
 
         assertThat(htmlUnitDriver.getTitle(), is("Test Application"));
         assertThat(htmlUnitDriver.findElement(By.tagName("h3")).getText(), is("Contact Details"));
+        assertThat(htmlUnitDriver.findElement(By.name("contactName")).getText(), isEmptyString());
 
     }
 

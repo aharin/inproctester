@@ -10,7 +10,7 @@
 
 <form action="" method="POST">
     <label>
-        <input type="text" value="${contact.getName()!}"/>
+        <input name="contactName" type="text" value="${contact.getName()!}"/>
     </label>
 </form>
 </body>
