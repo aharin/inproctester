@@ -31,7 +31,7 @@ public class InProcessHtmlUnitDriverTest {
 
 
     @Test
-    public void shouldTestGetRequest() throws Exception {
+    public void shouldSupportGetAndPostRequests() throws Exception {
 
         HtmlUnitDriver htmlUnitDriver = new InProcessHtmlUnitDriver(httpAppTester);
 
@@ -47,10 +47,7 @@ public class InProcessHtmlUnitDriverTest {
         htmlUnitDriver.findElement(By.tagName("form")).submit();
 
         assertThat(htmlUnitDriver.getCurrentUrl(), is("http://localhost/contacts/1"));
-
         assertThat(htmlUnitDriver.findElement(By.name("contactName")).getAttribute("value"), is("My Contact"));
-
-
 
     }
 

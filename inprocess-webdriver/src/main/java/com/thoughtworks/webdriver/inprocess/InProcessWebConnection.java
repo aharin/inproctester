@@ -41,8 +41,8 @@ public class InProcessWebConnection implements WebConnection {
     private String generateRawRequest(WebRequest request) throws IOException {
         HttpTester httpTester = new HttpTester();
         httpTester.setMethod(request.getHttpMethod().name());
-        httpTester.setURI(relativize(request.getUrl()));
-        httpTester.addHeader("Host", "localhost");
+        httpTester.setURI(getRequestPath(request.getUrl()));
+        httpTester.addHeader("Host", getRequestHost(request.getUrl()));
         if (request.getHttpMethod() == HttpMethod.POST) {
             if (request.getEncodingType() == FormEncodingType.URL_ENCODED) {
                 httpTester.setHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -52,7 +52,7 @@ public class InProcessWebConnection implements WebConnection {
         return httpTester.generate();
     }
 
-    private String relativize(URL absoluteUrl) {
+    private String getRequestPath(URL absoluteUrl) {
         try {
             URI uri = absoluteUrl.toURI();
             String path = uri.getPath();
@@ -70,7 +70,21 @@ public class InProcessWebConnection implements WebConnection {
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    private String getRequestHost(URL absoluteUrl) {
+        try {
+            URI uri = absoluteUrl.toURI();
+            String host = uri.getHost();
+            int port = uri.getPort();
+            StringBuilder sb = new StringBuilder(host);
+            if (port != -1) {
+                sb.append(":").append(port);
+            }
+            return sb.toString();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private WebResponseData parseRawResponse(String rawResponse) throws IOException {
