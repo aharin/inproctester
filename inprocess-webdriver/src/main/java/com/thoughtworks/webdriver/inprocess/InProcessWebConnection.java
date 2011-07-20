@@ -7,6 +7,9 @@ import org.eclipse.jetty.testing.HttpTester;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -38,16 +41,36 @@ public class InProcessWebConnection implements WebConnection {
     private String generateRawRequest(WebRequest request) throws IOException {
         HttpTester httpTester = new HttpTester();
         httpTester.setMethod(request.getHttpMethod().name());
-        httpTester.setURI(request.getUrl().toString());
-        httpTester.setVersion("HTTP/1.0");
-        if (request.getHttpMethod() == HttpMethod.GET) {
-        } else if (request.getHttpMethod() == HttpMethod.POST) {
+        httpTester.setURI(relativize(request.getUrl()));
+        httpTester.addHeader("Host", "localhost");
+        if (request.getHttpMethod() == HttpMethod.POST) {
             if (request.getEncodingType() == FormEncodingType.URL_ENCODED) {
                 httpTester.setHeader("Content-Type", "application/x-www-form-urlencoded");
                 httpTester.setContent(generateFormDataAsString(request));
             }
         }
         return httpTester.generate();
+    }
+
+    private String relativize(URL absoluteUrl) {
+        try {
+            URI uri = absoluteUrl.toURI();
+            String path = uri.getPath();
+            String query = uri.getQuery();
+            String fragment = uri.getFragment();
+
+            StringBuilder sb = new StringBuilder(path);
+            if (StringUtils.isNotEmpty(query)) {
+                sb.append("?").append(query);
+            }
+            if (StringUtils.isNotEmpty(fragment)) {
+                sb.append("#").append(fragment);
+            }
+            return sb.toString();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     private WebResponseData parseRawResponse(String rawResponse) throws IOException {
