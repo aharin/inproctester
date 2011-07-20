@@ -6,6 +6,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import static org.hamcrest.core.Is.is;
@@ -34,11 +35,22 @@ public class InProcessHtmlUnitDriverTest {
 
         HtmlUnitDriver htmlUnitDriver = new InProcessHtmlUnitDriver(httpAppTester);
 
-        htmlUnitDriver.get("http://localhost/test/a");
+        htmlUnitDriver.get("http://localhost/contacts/add");
 
         assertThat(htmlUnitDriver.getTitle(), is("Test Application"));
         assertThat(htmlUnitDriver.findElement(By.tagName("h3")).getText(), is("Contact Details"));
-        assertThat(htmlUnitDriver.findElement(By.name("contactName")).getText(), isEmptyString());
+        WebElement contactNameElement = htmlUnitDriver.findElement(By.name("contactName"));
+
+        assertThat(contactNameElement.getAttribute("value"), isEmptyString());
+        contactNameElement.sendKeys("My Contact");
+
+        htmlUnitDriver.findElement(By.tagName("form")).submit();
+
+        assertThat(htmlUnitDriver.getCurrentUrl(), is("http://localhost/contacts/1"));
+
+        assertThat(htmlUnitDriver.findElement(By.name("contactName")).getAttribute("value"), is("My Contact"));
+
+
 
     }
 

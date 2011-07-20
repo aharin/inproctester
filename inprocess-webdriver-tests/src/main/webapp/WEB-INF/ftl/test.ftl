@@ -12,6 +12,7 @@
     <label>
         <input name="contactName" type="text" value="${contact.getName()!}"/>
     </label>
+    <input type="submit" value="Submit"/>
 </form>
 </body>
 </html>

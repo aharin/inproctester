@@ -2,9 +2,12 @@ package com.thoughtworks.webdriver.inprocess;
 
 import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.testing.HttpTester;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -35,8 +38,15 @@ public class InProcessWebConnection implements WebConnection {
     private String generateRawRequest(WebRequest request) throws IOException {
         HttpTester httpTester = new HttpTester();
         httpTester.setMethod(request.getHttpMethod().name());
-        httpTester.setVersion("HTTP/1.0");
         httpTester.setURI(request.getUrl().toString());
+        httpTester.setVersion("HTTP/1.0");
+        if (request.getHttpMethod() == HttpMethod.GET) {
+        } else if (request.getHttpMethod() == HttpMethod.POST) {
+            if (request.getEncodingType() == FormEncodingType.URL_ENCODED) {
+                httpTester.setHeader("Content-Type", "application/x-www-form-urlencoded");
+                httpTester.setContent(generateFormDataAsString(request));
+            }
+        }
         return httpTester.generate();
     }
 
@@ -52,7 +62,41 @@ public class InProcessWebConnection implements WebConnection {
                 headers.add(new NameValuePair(headerName, headerValues.nextElement().toString()));
             }
         }
-        return new WebResponseData(httpTester.getContent().getBytes(httpTester.getCharacterEncoding()), httpTester.getStatus(), httpTester.getReason(), headers);
+        String content = httpTester.getContent();
+        if (content == null) content = "";
+        return new WebResponseData(content.getBytes(httpTester.getCharacterEncoding()), httpTester.getStatus(), httpTester.getReason(), headers);
+    }
+
+    private String generateFormDataAsString(WebRequest request) {
+        List<NameValuePair> requestParameters = request.getRequestParameters();
+
+        StringBuilder s = new StringBuilder();
+
+        for (NameValuePair requestParameter : requestParameters) {
+
+            String key = requestParameter.getName();
+
+            if (s.length() > 0) {
+                s.append('&');
+            }
+            s.append(urlEncode(key)).append("=");
+            String value = requestParameter.getValue();
+
+            if (StringUtils.isNotEmpty(value)) {
+                s.append(urlEncode(value));
+            }
+
+        }
+
+        return s.toString();
+    }
+
+    private String urlEncode(String key) {
+        try {
+            return URLEncoder.encode(key, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

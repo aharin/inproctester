@@ -30,6 +30,6 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>com.thoughtworks.webdriver.inprocess.testapp.TestServlet</servlet-name>
-        <url-pattern>/test/*</url-pattern>
+        <url-pattern>/contacts/*</url-pattern>
     </servlet-mapping>
 </web-app>

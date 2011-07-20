@@ -20,5 +20,11 @@ public class TestServlet extends HttpServlet {
         req.setAttribute("contact", contact);
         getServletContext().getRequestDispatcher("/test.ftl").forward(req, resp);
     }
+
+     @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+         contact.setName(req.getParameter("contactName"));
+         resp.sendRedirect(req.getContextPath() + "/contacts/1");
+    }
 }
 
