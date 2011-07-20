@@ -2,6 +2,7 @@ package com.thoughtworks.webdriver.inprocess.testapp;
 
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +25,7 @@ public class TestServlet extends HttpServlet {
      @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
          contact.setName(req.getParameter("contactName"));
+         resp.addCookie(new Cookie("FLASH_MESSAGE", "Success"));
          resp.sendRedirect(req.getContextPath() + "/contacts/1");
     }
 }

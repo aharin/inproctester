@@ -6,8 +6,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.text.IsEmptyString.isEmptyString;
@@ -33,7 +34,7 @@ public class InProcessHtmlUnitDriverTest {
     @Test
     public void shouldSupportGetAndPostRequests() throws Exception {
 
-        HtmlUnitDriver htmlUnitDriver = new InProcessHtmlUnitDriver(httpAppTester);
+        WebDriver htmlUnitDriver = new InProcessHtmlUnitDriver(httpAppTester);
 
         htmlUnitDriver.get("http://localhost/contacts/add");
 
@@ -48,6 +49,20 @@ public class InProcessHtmlUnitDriverTest {
 
         assertThat(htmlUnitDriver.getCurrentUrl(), is("http://localhost/contacts/1"));
         assertThat(htmlUnitDriver.findElement(By.name("contactName")).getAttribute("value"), is("My Contact"));
+
+    }
+
+    @Test
+    public void shouldSupportCookies() throws Exception {
+        WebDriver htmlUnitDriver = new InProcessHtmlUnitDriver(httpAppTester);
+        htmlUnitDriver.manage().deleteAllCookies();
+
+        htmlUnitDriver.get("http://localhost/contacts/add");
+        htmlUnitDriver.findElement(By.name("contactName")).sendKeys("My Contact");
+        htmlUnitDriver.findElement(By.tagName("form")).submit();
+
+        Cookie flashMessageCookie = htmlUnitDriver.manage().getCookieNamed("FLASH_MESSAGE");
+        assertThat(flashMessageCookie.getValue(), is("Success"));
 
     }
 

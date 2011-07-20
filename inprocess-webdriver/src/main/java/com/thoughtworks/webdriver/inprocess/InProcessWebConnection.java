@@ -1,6 +1,7 @@
 package com.thoughtworks.webdriver.inprocess;
 
 import com.gargoylesoftware.htmlunit.*;
+import com.gargoylesoftware.htmlunit.util.Cookie;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.testing.HttpTester;
@@ -16,9 +17,12 @@ import java.util.Enumeration;
 import java.util.List;
 
 public class InProcessWebConnection implements WebConnection {
+    private WebClient webClient;
     private HttpAppTester appTester;
+    private CookieParser cookieParser = new CookieParser();
 
     public InProcessWebConnection(WebClient webClient, HttpAppTester appTester) {
+        this.webClient = webClient;
         this.appTester = appTester;
     }
 
@@ -35,7 +39,17 @@ public class InProcessWebConnection implements WebConnection {
         }
 
         final WebResponseData responseData = parseRawResponse(rawResponse);
+        processCookies(webClient, request, responseData);
         return new WebResponse(responseData, request.getUrl(), request.getHttpMethod(), 0);
+    }
+
+    private void processCookies(WebClient webClient, WebRequest request, WebResponseData responseData) {
+        List<NameValuePair> responseHeaders = responseData.getResponseHeaders();
+        for (NameValuePair responseHeader : responseHeaders) {
+            if ("Set-Cookie".equalsIgnoreCase(responseHeader.getName())) {
+                webClient.getCookieManager().addCookie(cookieParser.parseCookie(request.getUrl().getHost(), responseHeader.getValue()));
+            }
+        }
     }
 
     private String generateRawRequest(WebRequest request) throws IOException {
