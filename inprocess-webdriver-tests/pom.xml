@@ -12,7 +12,6 @@
     <artifactId>inprocess-webdriver-tests</artifactId>
     <name>inprocess-webdriver-tests</name>
     <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
