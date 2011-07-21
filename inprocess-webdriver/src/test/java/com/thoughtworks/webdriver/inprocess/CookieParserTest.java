@@ -1,6 +1,8 @@
 package com.thoughtworks.webdriver.inprocess;
 
 import com.gargoylesoftware.htmlunit.util.Cookie;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -16,7 +18,7 @@ public class CookieParserTest {
 
     public Date getTestDate(int year, int month, int dayOfMonth, int hourOfDay, int minute, int second) {
         Calendar testDate = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-        testDate.set(year, month -1, dayOfMonth, hourOfDay, minute, second);
+        testDate.set(year, month - 1, dayOfMonth, hourOfDay, minute, second);
         testDate.set(Calendar.MILLISECOND, 0);
         return testDate.getTime();
     }

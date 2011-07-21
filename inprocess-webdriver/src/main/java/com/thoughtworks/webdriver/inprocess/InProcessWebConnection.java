@@ -38,16 +38,16 @@ public class InProcessWebConnection implements WebConnection {
             throw new RuntimeException(e);
         }
 
-        final WebResponseData responseData = parseRawResponse(rawResponse);
-        processCookies(webClient, request, responseData);
-        return new WebResponse(responseData, request.getUrl(), request.getHttpMethod(), 0);
+        WebResponse webResponse = new WebResponse(parseRawResponse(rawResponse), request.getUrl(), request.getHttpMethod(), 0);
+        processCookies(webResponse);
+        return webResponse;
     }
 
-    private void processCookies(WebClient webClient, WebRequest request, WebResponseData responseData) {
-        List<NameValuePair> responseHeaders = responseData.getResponseHeaders();
+    private void processCookies(WebResponse webResponse) {
+        List<NameValuePair> responseHeaders = webResponse.getResponseHeaders();
         for (NameValuePair responseHeader : responseHeaders) {
             if ("Set-Cookie".equalsIgnoreCase(responseHeader.getName())) {
-                webClient.getCookieManager().addCookie(cookieParser.parseCookie(request.getUrl().getHost(), responseHeader.getValue()));
+                webClient.getCookieManager().addCookie(cookieParser.parseCookie(webResponse.getWebRequest().getUrl().getHost(), responseHeader.getValue()));
             }
         }
     }

@@ -1,3 +1,4 @@
+<#-- @ftlvariable name="message" type="java.lang.String" -->
 <#-- @ftlvariable name="contact" type="com.thoughtworks.webdriver.inprocess.testapp.Contact" -->
 <html>
 <head>
@@ -7,7 +8,9 @@
 <h3>
     Contact Details
 </h3>
-
+<#if message??>
+<div class="message">${message}</div>
+</#if>
 <form action="" method="POST">
     <label>
         <input name="contactName" type="text" value="${contact.getName()!}"/>
