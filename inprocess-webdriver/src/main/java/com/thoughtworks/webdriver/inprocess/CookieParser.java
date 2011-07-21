@@ -22,7 +22,7 @@ public class CookieParser {
 
         Date expiresDate = null;
         for (String cookiePart : Arrays.copyOfRange(cookieParts, 1, cookieParts.length)) {
-            if (cookiePart.trim().startsWith("expires=")) {
+            if (cookiePart.trim().toLowerCase().startsWith("expires=")) {
                 String expiresDateString = cookiePart.split("=")[1];
                 try {
                     expiresDate = dateFormat.parse(expiresDateString);

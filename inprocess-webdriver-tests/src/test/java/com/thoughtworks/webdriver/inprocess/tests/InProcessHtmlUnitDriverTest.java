@@ -2,15 +2,16 @@ package com.thoughtworks.webdriver.inprocess.tests;
 
 import com.thoughtworks.webdriver.inprocess.HttpAppTester;
 import com.thoughtworks.webdriver.inprocess.InProcessHtmlUnitDriver;
+import org.hamcrest.Matchers;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.text.IsEmptyString.isEmptyString;
 import static org.junit.Assert.assertThat;
@@ -62,11 +63,15 @@ public class InProcessHtmlUnitDriverTest {
         htmlUnitDriver.findElement(By.name("contactName")).sendKeys("My Contact");
         htmlUnitDriver.findElement(By.tagName("form")).submit();
 
+        assertThat(htmlUnitDriver.findElement(By.className("message")).getText(), is("Success"));
+
+        htmlUnitDriver.get("http://localhost/contacts/1");
+
         Cookie flashMessageCookie = htmlUnitDriver.manage().getCookieNamed("FLASH_MESSAGE");
-        assertThat(flashMessageCookie.getValue(), is("Success"));
+        assertThat(flashMessageCookie, is(nullValue()));
 
-         assertThat(htmlUnitDriver.findElement(By.className("message")).getText(), is("Success"));
 
+         assertThat(htmlUnitDriver.findElements(By.className("message")), is(Matchers.<WebElement>empty()));
     }
 
 }

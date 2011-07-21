@@ -21,6 +21,9 @@ public class TestServlet extends HttpServlet {
         Cookie flashMessageCookie = getCookie(req, FLASH_MESSAGE_COOKIE_NAME);
         if (flashMessageCookie != null) {
             req.setAttribute("message", flashMessageCookie.getValue());
+            Cookie cookie = new Cookie(FLASH_MESSAGE_COOKIE_NAME, "");
+            cookie.setMaxAge(0);
+            resp.addCookie(cookie);
         }
         req.setAttribute("contact", contact);
         getServletContext().getRequestDispatcher("/test.ftl").forward(req, resp);

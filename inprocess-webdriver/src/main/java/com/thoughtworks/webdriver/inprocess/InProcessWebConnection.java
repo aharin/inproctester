@@ -12,6 +12,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -48,7 +49,17 @@ public class InProcessWebConnection implements WebConnection {
         List<NameValuePair> responseHeaders = webResponse.getResponseHeaders();
         for (NameValuePair responseHeader : responseHeaders) {
             if ("Set-Cookie".equalsIgnoreCase(responseHeader.getName())) {
-                webClient.getCookieManager().addCookie(cookieParser.parseCookie(webResponse.getWebRequest().getUrl().getHost(), responseHeader.getValue()));
+                Cookie cookie = cookieParser.parseCookie(webResponse.getWebRequest().getUrl().getHost(), responseHeader.getValue());
+                Date now = new Date();
+                CookieManager cookieManager = webClient.getCookieManager();
+                if (cookie.getExpires() != null && now.after(cookie.getExpires())) {
+                    Cookie existingCookie = cookieManager.getCookie(cookie.getName());
+                    if (existingCookie != null){
+                        cookieManager.removeCookie(existingCookie);
+                    }
+                } else {
+                    cookieManager.addCookie(cookie);
+                }
             }
         }
     }
