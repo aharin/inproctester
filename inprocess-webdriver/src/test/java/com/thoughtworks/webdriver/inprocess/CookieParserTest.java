@@ -1,8 +1,6 @@
 package com.thoughtworks.webdriver.inprocess;
 
 import com.gargoylesoftware.htmlunit.util.Cookie;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.util.Calendar;
