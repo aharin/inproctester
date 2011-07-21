@@ -53,7 +53,7 @@ public class InProcessHtmlUnitDriverTest {
 
     }
 
-    @Test@Ignore("WIP")
+    @Test
     public void shouldSupportCookies() throws Exception {
         WebDriver htmlUnitDriver = new InProcessHtmlUnitDriver(httpAppTester);
         htmlUnitDriver.manage().deleteAllCookies();

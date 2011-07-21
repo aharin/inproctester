@@ -15,6 +15,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
 
 public class InProcessWebConnection implements WebConnection {
     private WebClient webClient;
@@ -57,6 +58,7 @@ public class InProcessWebConnection implements WebConnection {
         httpTester.setMethod(request.getHttpMethod().name());
         httpTester.setURI(getRequestPath(request.getUrl()));
         httpTester.addHeader("Host", getRequestHost(request.getUrl()));
+        addCookies(httpTester);
         if (request.getHttpMethod() == HttpMethod.POST) {
             if (request.getEncodingType() == FormEncodingType.URL_ENCODED) {
                 httpTester.setHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -64,6 +66,18 @@ public class InProcessWebConnection implements WebConnection {
             }
         }
         return httpTester.generate();
+    }
+
+    private void addCookies(HttpTester httpTester) {
+        Set<Cookie> cookies = webClient.getCookieManager().getCookies();
+        if (!cookies.isEmpty()) {
+            List<String> cookieStrings = new ArrayList<String>();
+            for (Cookie cookie : cookies) {
+                cookieStrings.add(cookie.getName() + "=" + cookie.getValue());
+            }
+            String cookieHeaderValue = StringUtils.join(cookieStrings, "; ");
+            httpTester.addHeader("Cookie", cookieHeaderValue);
+        }
     }
 
     private String getRequestPath(URL absoluteUrl) {
