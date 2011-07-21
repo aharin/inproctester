@@ -7,16 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.testing.HttpTester;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class InProcessWebConnection implements WebConnection {
     private WebClient webClient;
@@ -41,11 +32,11 @@ public class InProcessWebConnection implements WebConnection {
         }
 
         WebResponse webResponse = new WebResponse(parseRawResponse(rawResponse), request.getUrl(), request.getHttpMethod(), 0);
-        processCookies(webResponse);
+        storeCookies(webResponse);
         return webResponse;
     }
 
-    private void processCookies(WebResponse webResponse) {
+    private void storeCookies(WebResponse webResponse) {
         List<NameValuePair> responseHeaders = webResponse.getResponseHeaders();
         for (NameValuePair responseHeader : responseHeaders) {
             if ("Set-Cookie".equalsIgnoreCase(responseHeader.getName())) {
@@ -53,10 +44,7 @@ public class InProcessWebConnection implements WebConnection {
                 Date now = new Date();
                 CookieManager cookieManager = webClient.getCookieManager();
                 if (cookie.getExpires() != null && now.after(cookie.getExpires())) {
-                    Cookie existingCookie = cookieManager.getCookie(cookie.getName());
-                    if (existingCookie != null){
-                        cookieManager.removeCookie(existingCookie);
-                    }
+                    removeCookie(cookieManager, cookie.getName());
                 } else {
                     cookieManager.addCookie(cookie);
                 }
@@ -64,22 +52,14 @@ public class InProcessWebConnection implements WebConnection {
         }
     }
 
-    private String generateRawRequest(WebRequest request) throws IOException {
-        HttpTester httpTester = new HttpTester();
-        httpTester.setMethod(request.getHttpMethod().name());
-        httpTester.setURI(getRequestPath(request.getUrl()));
-        httpTester.addHeader("Host", getRequestHost(request.getUrl()));
-        addCookies(httpTester);
-        if (request.getHttpMethod() == HttpMethod.POST) {
-            if (request.getEncodingType() == FormEncodingType.URL_ENCODED) {
-                httpTester.setHeader("Content-Type", "application/x-www-form-urlencoded");
-                httpTester.setContent(generateFormDataAsString(request));
-            }
+    private void removeCookie(CookieManager cookieManager, String cookieName) {
+        Cookie existingCookie = cookieManager.getCookie(cookieName);
+        if (existingCookie != null) {
+            cookieManager.removeCookie(existingCookie);
         }
-        return httpTester.generate();
     }
 
-    private void addCookies(HttpTester httpTester) {
+    private void sendCookies(HttpTester httpTester) {
         Set<Cookie> cookies = webClient.getCookieManager().getCookies();
         if (!cookies.isEmpty()) {
             List<String> cookieStrings = new ArrayList<String>();
@@ -91,40 +71,21 @@ public class InProcessWebConnection implements WebConnection {
         }
     }
 
-    private String getRequestPath(URL absoluteUrl) {
-        try {
-            URI uri = absoluteUrl.toURI();
-            String path = uri.getPath();
-            String query = uri.getQuery();
-            String fragment = uri.getFragment();
-
-            StringBuilder sb = new StringBuilder(path);
-            if (StringUtils.isNotEmpty(query)) {
-                sb.append("?").append(query);
+    private String generateRawRequest(WebRequest request) throws IOException {
+        HttpTester httpTester = new HttpTester();
+        httpTester.setMethod(request.getHttpMethod().name());
+        httpTester.setURI(UrlHelper.getRequestPath(request.getUrl()));
+        httpTester.addHeader("Host", UrlHelper.getRequestHost(request.getUrl()));
+        sendCookies(httpTester);
+        if (request.getHttpMethod() == HttpMethod.POST) {
+            httpTester.setHeader("Content-Type", request.getEncodingType().getName());
+            if (request.getEncodingType() == FormEncodingType.URL_ENCODED) {
+                httpTester.setContent(new UrlEncodedContent(request.getRequestParameters()).generateFormDataAsString());
             }
-            if (StringUtils.isNotEmpty(fragment)) {
-                sb.append("#").append(fragment);
-            }
-            return sb.toString();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
         }
+        return httpTester.generate();
     }
 
-    private String getRequestHost(URL absoluteUrl) {
-        try {
-            URI uri = absoluteUrl.toURI();
-            String host = uri.getHost();
-            int port = uri.getPort();
-            StringBuilder sb = new StringBuilder(host);
-            if (port != -1) {
-                sb.append(":").append(port);
-            }
-            return sb.toString();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private WebResponseData parseRawResponse(String rawResponse) throws IOException {
         HttpTester httpTester = new HttpTester();
@@ -135,7 +96,8 @@ public class InProcessWebConnection implements WebConnection {
             String headerName = headerNames.nextElement().toString();
             Enumeration headerValues = httpTester.getHeaderValues(headerName);
             while (headerValues.hasMoreElements()) {
-                headers.add(new NameValuePair(headerName, headerValues.nextElement().toString()));
+                String headerValue = headerValues.nextElement().toString();
+                headers.add(new NameValuePair(headerName, headerValue));
             }
         }
         String content = httpTester.getContent();
@@ -143,36 +105,5 @@ public class InProcessWebConnection implements WebConnection {
         return new WebResponseData(content.getBytes(httpTester.getCharacterEncoding()), httpTester.getStatus(), httpTester.getReason(), headers);
     }
 
-    private String generateFormDataAsString(WebRequest request) {
-        List<NameValuePair> requestParameters = request.getRequestParameters();
-
-        StringBuilder s = new StringBuilder();
-
-        for (NameValuePair requestParameter : requestParameters) {
-
-            String key = requestParameter.getName();
-
-            if (s.length() > 0) {
-                s.append('&');
-            }
-            s.append(urlEncode(key)).append("=");
-            String value = requestParameter.getValue();
-
-            if (StringUtils.isNotEmpty(value)) {
-                s.append(urlEncode(value));
-            }
-
-        }
-
-        return s.toString();
-    }
-
-    private String urlEncode(String key) {
-        try {
-            return URLEncoder.encode(key, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
 
