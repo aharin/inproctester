@@ -22,19 +22,19 @@ public class InProcessHtmlUnitDriverTest {
     private static HttpAppTester httpAppTester;
 
     @BeforeClass
-    public static void setUp() throws Exception {
+    public static void setUp() {
         httpAppTester = new HttpAppTester("./src/main/webapp", "/");
         httpAppTester.start();
     }
 
     @AfterClass
-    public static void tearDown() throws Exception {
+    public static void tearDown() {
         httpAppTester.stop();
     }
 
 
     @Test
-    public void shouldSupportGetAndPostRequests() throws Exception {
+    public void shouldSupportGetAndPostRequests() {
 
         WebDriver htmlUnitDriver = new InProcessHtmlUnitDriver(httpAppTester);
 
@@ -55,7 +55,7 @@ public class InProcessHtmlUnitDriverTest {
     }
 
     @Test
-    public void shouldSupportCookies() throws Exception {
+    public void shouldSupportCookies() {
         WebDriver htmlUnitDriver = new InProcessHtmlUnitDriver(httpAppTester);
         htmlUnitDriver.manage().deleteAllCookies();
 

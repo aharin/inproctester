@@ -59,15 +59,33 @@ public class HttpAppTester {
         context.addServlet(servletClass, pathSpec);
     }
 
-    public void start() throws Exception {
-        server.start();
+    public void start() {
+        try {
+            server.start();
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void stop() throws Exception {
-        server.stop();
+    public void stop() {
+        try {
+            server.stop();
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public String getResponses(String rawRequests) throws Exception {
-        return connector.getResponses(rawRequests);
+    public String getResponses(String rawRequests) {
+        try {
+            return connector.getResponses(rawRequests);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

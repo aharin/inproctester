@@ -24,12 +24,7 @@ public class InProcessWebConnection implements WebConnection {
 
         String rawRequests = generateRawRequest(request);
 
-        String rawResponse;
-        try {
-            rawResponse = appTester.getResponses(rawRequests);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        String rawResponse = appTester.getResponses(rawRequests);
 
         WebResponse webResponse = new WebResponse(parseRawResponse(rawResponse), request.getUrl(), request.getHttpMethod(), 0);
         storeCookies(webResponse);
