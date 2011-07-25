@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="message" type="java.lang.String" -->
-<#-- @ftlvariable name="contact" type="com.thoughtworks.inprocess.testapp.Contact" -->
+<#-- @ftlvariable name="contact" type="com.thoughtworks.inproctester.testapp.Contact" -->
 <html>
 <head>
     <title>Test Application</title>

@@ -20,8 +20,8 @@
     </servlet>
 
     <servlet>
-        <servlet-name>com.thoughtworks.webdriver.inprocess.testapp.TestServlet</servlet-name>
-        <servlet-class>com.thoughtworks.inprocess.testapp.TestServlet</servlet-class>
+        <servlet-name>TestServlet</servlet-name>
+        <servlet-class>com.thoughtworks.inproctester.testapp.TestServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -29,7 +29,7 @@
         <url-pattern>*.ftl</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>com.thoughtworks.webdriver.inprocess.testapp.TestServlet</servlet-name>
+        <servlet-name>TestServlet</servlet-name>
         <url-pattern>/contacts/*</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -1,4 +1,4 @@
-package com.thoughtworks.inprocess.jetty;
+package com.thoughtworks.inproctester.jetty;
 
 import org.eclipse.jetty.server.LocalConnector;
 import org.eclipse.jetty.server.Server;

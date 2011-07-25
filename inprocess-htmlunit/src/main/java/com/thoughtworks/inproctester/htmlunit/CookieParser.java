@@ -1,4 +1,4 @@
-package com.thoughtworks.inprocess.htmlunit;
+package com.thoughtworks.inproctester.htmlunit;
 
 import com.gargoylesoftware.htmlunit.util.Cookie;
 

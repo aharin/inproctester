@@ -1,4 +1,4 @@
-package com.thoughtworks.inprocess.testapp;
+package com.thoughtworks.inproctester.testapp;
 
 
 import javax.servlet.ServletException;

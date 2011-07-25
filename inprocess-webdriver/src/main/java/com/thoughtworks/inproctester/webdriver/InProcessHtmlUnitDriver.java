@@ -1,7 +1,7 @@
-package com.thoughtworks.inprocess.webdriver;
+package com.thoughtworks.inproctester.webdriver;
 
-import com.thoughtworks.inprocess.jetty.HttpAppTester;
-import com.thoughtworks.inprocess.htmlunit.InProcessWebConnection;
+import com.thoughtworks.inproctester.jetty.HttpAppTester;
+import com.thoughtworks.inproctester.htmlunit.InProcessWebConnection;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 public class InProcessHtmlUnitDriver extends HtmlUnitDriver {
