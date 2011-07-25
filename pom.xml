@@ -19,7 +19,7 @@
         <module>inproctester-jetty</module>
         <module>inproctester-htmlunit</module>
         <module>inproctester-webdriver</module>
-        <module>inprocess-webdriver-tests</module>
+        <module>inproctester-tests</module>
     </modules>
      <build>
      <pluginManagement>

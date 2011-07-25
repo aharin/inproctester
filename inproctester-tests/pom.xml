@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.thoughtworks.inproctester</groupId>
-    <artifactId>inprocess-webdriver-tests</artifactId>
-    <name>inprocess-webdriver-tests</name>
+    <artifactId>inproctester-tests</artifactId>
+    <name>inproctester-tests</name>
     <packaging>war</packaging>
 
     <dependencies>
