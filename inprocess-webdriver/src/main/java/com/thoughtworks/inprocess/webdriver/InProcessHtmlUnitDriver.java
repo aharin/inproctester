@@ -1,6 +1,6 @@
 package com.thoughtworks.inprocess.webdriver;
 
-import com.thoughtworks.inprocess.htmlunit.HttpAppTester;
+import com.thoughtworks.inprocess.jetty.HttpAppTester;
 import com.thoughtworks.inprocess.htmlunit.InProcessWebConnection;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 

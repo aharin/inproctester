@@ -3,6 +3,7 @@ package com.thoughtworks.inprocess.htmlunit;
 import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.util.Cookie;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
+import com.thoughtworks.inprocess.jetty.HttpAppTester;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.testing.HttpTester;
 
