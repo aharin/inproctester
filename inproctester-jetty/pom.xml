@@ -10,7 +10,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.thoughtworks.inproctester</groupId>
-    <artifactId>inprocess-jetty</artifactId>
+    <artifactId>inproctester-jetty</artifactId>
     <name>inprocess-jetty</name>
     <packaging>jar</packaging>
 
