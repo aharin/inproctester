@@ -21,7 +21,7 @@
 
     <servlet>
         <servlet-name>com.thoughtworks.webdriver.inprocess.testapp.TestServlet</servlet-name>
-        <servlet-class>com.thoughtworks.webdriver.inprocess.testapp.TestServlet</servlet-class>
+        <servlet-class>com.thoughtworks.inprocess.testapp.TestServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

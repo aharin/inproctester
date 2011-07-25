@@ -1,4 +1,4 @@
-package com.thoughtworks.webdriver.inprocess;
+package com.thoughtworks.inprocess.webdriver;
 
 import com.thoughtworks.inprocess.htmlunit.HttpAppTester;
 import com.thoughtworks.inprocess.htmlunit.InProcessWebConnection;

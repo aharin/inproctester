@@ -1,4 +1,4 @@
-package com.thoughtworks.webdriver.inprocess.testapp;
+package com.thoughtworks.inprocess.testapp;
 
 public class Contact {
     private String name;
