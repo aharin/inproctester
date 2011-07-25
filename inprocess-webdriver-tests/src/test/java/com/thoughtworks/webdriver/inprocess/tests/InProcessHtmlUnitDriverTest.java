@@ -1,6 +1,6 @@
 package com.thoughtworks.webdriver.inprocess.tests;
 
-import com.thoughtworks.webdriver.inprocess.HttpAppTester;
+import com.thoughtworks.inprocess.htmlunit.HttpAppTester;
 import com.thoughtworks.webdriver.inprocess.InProcessHtmlUnitDriver;
 import org.hamcrest.Matchers;
 import org.junit.AfterClass;

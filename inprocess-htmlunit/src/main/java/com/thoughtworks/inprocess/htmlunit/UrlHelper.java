@@ -1,4 +1,4 @@
-package com.thoughtworks.webdriver.inprocess;
+package com.thoughtworks.inprocess.htmlunit;
 
 import org.apache.commons.lang.StringUtils;
 
