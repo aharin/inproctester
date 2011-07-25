@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.thoughtworks.inproctester</groupId>
-    <artifactId>inprocess-webdriver-project</artifactId>
+    <artifactId>inproctester-project</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>inprocess-webdriver-project</name>
+    <name>inproctester-project</name>
     <packaging>pom</packaging>
 
      <properties>
