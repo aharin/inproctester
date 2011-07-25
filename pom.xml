@@ -18,7 +18,7 @@
     <modules>
         <module>inproctester-jetty</module>
         <module>inproctester-htmlunit</module>
-        <module>inprocess-webdriver</module>
+        <module>inproctester-webdriver</module>
         <module>inprocess-webdriver-tests</module>
     </modules>
      <build>

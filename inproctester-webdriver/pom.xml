@@ -10,8 +10,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.thoughtworks.inproctester</groupId>
-    <artifactId>inprocess-webdriver</artifactId>
-    <name>inprocess-webdriver</name>
+    <artifactId>inproctester-webdriver</artifactId>
+    <name>inproctester-webdriver</name>
     <packaging>jar</packaging>
 
     <dependencies>
