@@ -14,15 +14,17 @@
  */
 package com.thoughtworks.inproctester.htmlunit;
 
+import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLEncoder;
 
 public class UrlHelper {
+
+    private static URLCodec urlCodec = new URLCodec();
 
     public static String getRequestPath(URL absoluteUrl) {
         try {
@@ -61,7 +63,7 @@ public class UrlHelper {
 
     public static String urlEncode(String value) {
         try {
-            return URLEncoder.encode(value, "UTF-8");
+            return urlCodec.encode(value, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
