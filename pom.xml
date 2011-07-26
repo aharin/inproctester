@@ -10,7 +10,21 @@
     <name>inproctester-project</name>
     <packaging>pom</packaging>
 
-     <properties>
+    <url>https://github.com/aharin/inproctester</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:git:git@github.com:aharin/inproctester.git</connection>
+        <url>scm:git:git@github.com:aharin/inproctester.git</url>
+        <developerConnection>scm:git:git@github.com:aharin/inproctester.git</developerConnection>
+    </scm>
+
+    <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -21,8 +35,8 @@
         <module>inproctester-webdriver</module>
         <module>inproctester-tests</module>
     </modules>
-     <build>
-     <pluginManagement>
+    <build>
+        <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
