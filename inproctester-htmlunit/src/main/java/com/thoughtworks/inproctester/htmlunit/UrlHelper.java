@@ -14,6 +14,7 @@
  */
 package com.thoughtworks.inproctester.htmlunit;
 
+import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.lang.StringUtils;
 
@@ -63,7 +64,7 @@ public class UrlHelper {
 
     public static String urlEncode(String value) {
         try {
-            return urlCodec.encode(value, "UTF-8");
+            return urlCodec.encode(value, CharEncoding.UTF_8);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
