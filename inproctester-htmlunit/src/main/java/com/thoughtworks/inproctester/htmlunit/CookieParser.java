@@ -26,7 +26,7 @@ public class CookieParser {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd-MMM-yyyy HH:mm:ss zzz");
 
 
-    public Cookie parseCookie(String host, String rawCookie) {
+    public Cookie parseCookie(String hostName, String rawCookie) {
         String[] cookieParts = rawCookie.split(";");
         String valuePart = cookieParts[0];
         int idx = valuePart.indexOf("=");
@@ -45,6 +45,6 @@ public class CookieParser {
             }
         }
 
-        return new Cookie(host, cookieName, cookieValue, "/", expiresDate, false);
+        return new Cookie(hostName, cookieName, cookieValue, "/", expiresDate, false);
     }
 }

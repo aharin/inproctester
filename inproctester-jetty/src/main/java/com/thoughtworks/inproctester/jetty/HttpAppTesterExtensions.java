@@ -12,17 +12,17 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.thoughtworks.inproctester.webdriver;
+package com.thoughtworks.inproctester.jetty;
 
-import com.thoughtworks.inproctester.jetty.HttpAppTester;
-import com.thoughtworks.inproctester.htmlunit.InProcessWebConnection;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.eclipse.jetty.testing.HttpTester;
 
-public class InProcessHtmlUnitDriver extends HtmlUnitDriver {
+import java.io.IOException;
 
-
-    public InProcessHtmlUnitDriver(HttpAppTester httpAppTester) {
-        getWebClient().setWebConnection(new InProcessWebConnection(httpAppTester, getWebClient().getCookieManager()));
+public class HttpAppTesterExtensions {
+    public static HttpTester processRequest(HttpAppTester appTester, HttpTester testerRequest) throws IOException {
+        String rawResponse = appTester.getResponses(testerRequest.generate());
+        HttpTester testerResponse = new HttpTester();
+        testerResponse.parse(rawResponse);
+        return testerResponse;
     }
-
 }

@@ -16,7 +16,6 @@ package com.thoughtworks.inproctester.htmlunit;
 
 import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.util.Cookie;
-import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import com.thoughtworks.inproctester.jetty.HttpAppTester;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.testing.HttpTester;
@@ -24,41 +23,53 @@ import org.eclipse.jetty.testing.HttpTester;
 import java.io.IOException;
 import java.util.*;
 
+import static com.thoughtworks.inproctester.htmlunit.HttpTesterAdaptor.adaptRequest;
+import static com.thoughtworks.inproctester.htmlunit.HttpTesterAdaptor.adaptResponse;
+import static com.thoughtworks.inproctester.jetty.HttpAppTesterExtensions.processRequest;
+
 public class InProcessWebConnection implements WebConnection {
-    private WebClient webClient;
+    private CookieManager cookieManager;
     private HttpAppTester appTester;
     private CookieParser cookieParser = new CookieParser();
 
-    public InProcessWebConnection(WebClient webClient, HttpAppTester appTester) {
-        this.webClient = webClient;
+    public InProcessWebConnection(HttpAppTester appTester, CookieManager cookieManager) {
         this.appTester = appTester;
+        this.cookieManager = cookieManager;
     }
 
     @Override
-    public WebResponse getResponse(WebRequest request) throws IOException {
-
-        String rawRequests = generateRawRequest(request);
-
-        String rawResponse = appTester.getResponses(rawRequests);
-
-        WebResponse webResponse = new WebResponse(parseRawResponse(rawResponse), request.getUrl(), request.getHttpMethod(), 0);
-        storeCookies(webResponse);
-        return webResponse;
+    public WebResponse getResponse(WebRequest webRequest) throws IOException {
+        return new WebResponse(adaptResponse(processTesterRequest(adaptRequest(webRequest))), webRequest, 0);
     }
 
-    private void storeCookies(WebResponse webResponse) {
-        List<NameValuePair> responseHeaders = webResponse.getResponseHeaders();
-        for (NameValuePair responseHeader : responseHeaders) {
-            if ("Set-Cookie".equalsIgnoreCase(responseHeader.getName())) {
-                Cookie cookie = cookieParser.parseCookie(webResponse.getWebRequest().getUrl().getHost(), responseHeader.getValue());
-                Date now = new Date();
-                CookieManager cookieManager = webClient.getCookieManager();
-                if (cookie.getExpires() != null && now.after(cookie.getExpires())) {
-                    removeCookie(cookieManager, cookie.getName());
-                } else {
-                    cookieManager.addCookie(cookie);
+    private HttpTester processTesterRequest(HttpTester testerRequest) throws IOException {
+        addCookiesToRequest(testerRequest);
+        HttpTester testerResponse = processRequest(appTester, testerRequest);
+        storeCookiesFromResponse(testerRequest, testerResponse);
+        return testerResponse;
+    }
+
+    private void storeCookiesFromResponse(HttpTester testerRequest, HttpTester testerResponse) {
+        String requestHostName = testerRequest.getHeader("Host").split(":", 1)[0];
+        Enumeration headerNames = testerResponse.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement().toString();
+            if ("Set-Cookie".equalsIgnoreCase(headerName)) {
+                Enumeration headerValues = testerResponse.getHeaderValues(headerName);
+                while (headerValues.hasMoreElements()) {
+                    storeCookie(requestHostName, headerValues.nextElement().toString());
                 }
             }
+        }
+    }
+
+    private void storeCookie(String hostName, String rawCookie) {
+        Cookie cookie = cookieParser.parseCookie(hostName, rawCookie);
+        Date now = new Date();
+        if (cookie.getExpires() != null && now.after(cookie.getExpires())) {
+            removeCookie(this.cookieManager, cookie.getName());
+        } else {
+            this.cookieManager.addCookie(cookie);
         }
     }
 
@@ -69,8 +80,8 @@ public class InProcessWebConnection implements WebConnection {
         }
     }
 
-    private void sendCookies(HttpTester httpTester) {
-        Set<Cookie> cookies = webClient.getCookieManager().getCookies();
+    private void addCookiesToRequest(HttpTester httpTester) {
+        Set<Cookie> cookies = cookieManager.getCookies();
         if (!cookies.isEmpty()) {
             List<String> cookieStrings = new ArrayList<String>();
             for (Cookie cookie : cookies) {
@@ -79,40 +90,6 @@ public class InProcessWebConnection implements WebConnection {
             String cookieHeaderValue = StringUtils.join(cookieStrings, "; ");
             httpTester.addHeader("Cookie", cookieHeaderValue);
         }
-    }
-
-    private String generateRawRequest(WebRequest request) throws IOException {
-        HttpTester httpTester = new HttpTester();
-        httpTester.setMethod(request.getHttpMethod().name());
-        httpTester.setURI(UrlHelper.getRequestPath(request.getUrl()));
-        httpTester.addHeader("Host", UrlHelper.getRequestHost(request.getUrl()));
-        sendCookies(httpTester);
-        if (request.getHttpMethod() == HttpMethod.POST) {
-            httpTester.setHeader("Content-Type", request.getEncodingType().getName());
-            if (request.getEncodingType() == FormEncodingType.URL_ENCODED) {
-                httpTester.setContent(new UrlEncodedContent(request.getRequestParameters()).generateFormDataAsString());
-            }
-        }
-        return httpTester.generate();
-    }
-
-
-    private WebResponseData parseRawResponse(String rawResponse) throws IOException {
-        HttpTester httpTester = new HttpTester();
-        httpTester.parse(rawResponse);
-        final List<NameValuePair> headers = new ArrayList<NameValuePair>();
-        Enumeration headerNames = httpTester.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement().toString();
-            Enumeration headerValues = httpTester.getHeaderValues(headerName);
-            while (headerValues.hasMoreElements()) {
-                String headerValue = headerValues.nextElement().toString();
-                headers.add(new NameValuePair(headerName, headerValue));
-            }
-        }
-        String content = httpTester.getContent();
-        if (content == null) content = "";
-        return new WebResponseData(content.getBytes(httpTester.getCharacterEncoding()), httpTester.getStatus(), httpTester.getReason(), headers);
     }
 
 }
