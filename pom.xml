@@ -55,5 +55,12 @@
             </plugins>
         </pluginManagement>
     </build>
+    <developers>
+        <developer>
+            <id>aharin</id>
+            <name>Alex Harin</name>
+            <email>aharin@thoughtworks.com</email>
+        </developer>
+    </developers>
 
 </project>
