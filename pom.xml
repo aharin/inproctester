@@ -11,7 +11,7 @@
     <groupId>com.thoughtworks.inproctester</groupId>
     <artifactId>inproctester-project</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>inproctester-project</name>
+    <name>In Process Tester :: Project</name>
     <packaging>pom</packaging>
 
     <url>https://github.com/aharin/inproctester</url>
