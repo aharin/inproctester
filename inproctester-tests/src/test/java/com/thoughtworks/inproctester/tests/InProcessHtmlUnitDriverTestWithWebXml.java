@@ -15,9 +15,7 @@
 package com.thoughtworks.inproctester.tests;
 
 import com.thoughtworks.inproctester.jetty.HttpAppTester;
-import com.thoughtworks.inproctester.testapp.TestServlet;
 import com.thoughtworks.inproctester.webdriver.InProcessHtmlUnitDriver;
-import freemarker.ext.servlet.FreemarkerServlet;
 import org.hamcrest.Matchers;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -27,32 +25,19 @@ import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import java.util.HashMap;
-
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.text.IsEmptyString.isEmptyString;
 import static org.junit.Assert.assertThat;
 
-public class InProcessHtmlUnitDriverTest {
+public class InProcessHtmlUnitDriverTestWithWebXml {
 
 
     private static HttpAppTester httpAppTester;
 
     @BeforeClass
     public static void setUp() {
-        httpAppTester = new HttpAppTester("/");
-        httpAppTester.setResourceBase("./src/main/webapp");
-
-        httpAppTester.addServlet(FreemarkerServlet.class, "*.ftl", new HashMap<String, String>() {
-            {
-                put("TemplatePath", "/WEB-INF/ftl/");
-                put("template_exception_handler", "rethrow");
-
-            }
-        });
-        httpAppTester.addServlet(TestServlet.class, "/contacts/*");
-
+        httpAppTester = new HttpAppTester("./src/main/webapp", "/");
         httpAppTester.start();
     }
 
@@ -100,7 +85,7 @@ public class InProcessHtmlUnitDriverTest {
         assertThat(flashMessageCookie, is(nullValue()));
 
 
-        assertThat(htmlUnitDriver.findElements(By.className("message")), is(Matchers.<WebElement>empty()));
+         assertThat(htmlUnitDriver.findElements(By.className("message")), is(Matchers.<WebElement>empty()));
     }
 
 }

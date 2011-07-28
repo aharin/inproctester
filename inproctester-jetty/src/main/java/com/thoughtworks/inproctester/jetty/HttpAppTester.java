@@ -18,9 +18,13 @@ import org.eclipse.jetty.server.LocalConnector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ErrorHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
 
+import javax.print.DocFlavor;
 import javax.servlet.Servlet;
+import java.util.Collections;
+import java.util.Map;
 
 public class HttpAppTester {
 
@@ -52,10 +56,11 @@ public class HttpAppTester {
         return context;
     }
 
-    public HttpAppTester() {
+    public HttpAppTester(String contextPath) {
         server = new Server();
         connector = new LocalConnector();
-        context = createServletContextHandler();
+        context = createServletContextHandler(contextPath);
+
 
         server.addBean(new ErrorHandler());
         server.setSendServerVersion(false);
@@ -64,13 +69,23 @@ public class HttpAppTester {
 
     }
 
-    private ServletContextHandler createServletContextHandler() {
-        return new ServletContextHandler(ServletContextHandler.SESSIONS);
+    private ServletContextHandler createServletContextHandler(String contextPath) {
+        return new ServletContextHandler(null, contextPath, ServletContextHandler.SESSIONS);
     }
 
 
+    public void addServlet(Class<? extends Servlet> servletClass, String pathSpec, Map<String, String> initParameters) {
+        ServletHolder servletHolder = context.addServlet(servletClass, pathSpec);
+        servletHolder.setInitParameters(initParameters);
+    }
+
     public void addServlet(Class<? extends Servlet> servletClass, String pathSpec) {
-        context.addServlet(servletClass, pathSpec);
+       context.addServlet(servletClass, pathSpec);
+    }
+
+    public void setResourceBase(String resourceBase)
+    {
+        context.setResourceBase(resourceBase);
     }
 
     public void start() {
