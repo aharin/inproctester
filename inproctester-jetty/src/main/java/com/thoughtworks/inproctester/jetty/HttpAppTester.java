@@ -17,13 +17,14 @@ package com.thoughtworks.inproctester.jetty;
 import org.eclipse.jetty.server.LocalConnector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ErrorHandler;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
 
-import javax.print.DocFlavor;
+import javax.servlet.Filter;
 import javax.servlet.Servlet;
-import java.util.Collections;
+import java.util.EventListener;
 import java.util.Map;
 
 public class HttpAppTester {
@@ -80,11 +81,24 @@ public class HttpAppTester {
     }
 
     public void addServlet(Class<? extends Servlet> servletClass, String pathSpec) {
-       context.addServlet(servletClass, pathSpec);
+        context.addServlet(servletClass, pathSpec);
     }
 
-    public void setResourceBase(String resourceBase)
-    {
+
+    public void addFilter(Class<? extends Filter> filterClass, String pathSpec, int dispatches, Map<String, String> initParameters) {
+        FilterHolder servletHolder = context.addFilter(filterClass, pathSpec, dispatches);
+        servletHolder.setInitParameters(initParameters);
+    }
+
+    public void addFilter(Class<? extends Filter> filterClass, String pathSpec, int dispatches) {
+        context.addFilter(filterClass, pathSpec, dispatches);
+    }
+
+    public void addEventListener(EventListener listener) {
+        context.addEventListener(listener);
+    }
+
+    public void setResourceBase(String resourceBase) {
         context.setResourceBase(resourceBase);
     }
 
