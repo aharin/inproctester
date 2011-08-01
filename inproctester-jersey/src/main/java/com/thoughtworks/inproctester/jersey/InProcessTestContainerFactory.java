@@ -58,7 +58,6 @@ public class InProcessTestContainerFactory implements TestContainerFactory {
         private InprocessWebTestContainer(URI baseUri, WebAppDescriptor ad) {
             this.baseUri = UriBuilder.fromUri(baseUri)
                     .path(ad.getContextPath())
-                    .path(ad.getServletPath())
                     .build();
 
             LOGGER.info("Creating Inprocess Web Container configured at the base URI " + this.baseUri);
@@ -123,7 +122,7 @@ public class InProcessTestContainerFactory implements TestContainerFactory {
             httpServer = new HttpAppTester(contextPath);
 
             if (servletClass != null) {
-                httpServer.addServlet(servletClass, "/*", initParams);
+                httpServer.addServlet(servletClass, servletPath, initParams);
             }
 
         }

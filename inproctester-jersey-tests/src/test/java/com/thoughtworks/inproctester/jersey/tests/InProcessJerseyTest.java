@@ -28,6 +28,7 @@ public class InProcessJerseyTest extends JerseyTest {
     public InProcessJerseyTest() throws Exception {
         super(new WebAppDescriptor.Builder("com.thoughtworks.inproctester.jersey.testapp")
                 .clientConfig(loadClientConfig())
+                .servletPath("/*")
 //                .initParam("com.sun.jersey.config.feature.Redirect", "true")
                 .initParam("com.sun.jersey.api.json.POJOMappingFeature", "true")
                 .contextPath("/jersey").build());
