@@ -28,6 +28,7 @@ public class InProcessJerseyTest extends JerseyTest {
     public InProcessJerseyTest() throws Exception {
         super(new WebAppDescriptor.Builder("com.thoughtworks.inproctester.jersey.testapp")
                 .clientConfig(loadClientConfig())
+//                .initParam("com.sun.jersey.config.feature.Redirect", "true")
                 .initParam("com.sun.jersey.api.json.POJOMappingFeature", "true")
                 .contextPath("/jersey").build());
     }
@@ -36,7 +37,7 @@ public class InProcessJerseyTest extends JerseyTest {
     @Test
     public void shouldGetResource() throws Exception {
         WebResource webResource = resource();
-        JsonNode resource = webResource.path("").accept(MediaType.APPLICATION_JSON_TYPE).get(JsonNode.class);
+        JsonNode resource = webResource.path("/").accept(MediaType.APPLICATION_JSON_TYPE).get(JsonNode.class);
         Assert.assertEquals(objectMapper.readValue("{\"id\":1, \"name\":\"test\"}", JsonNode.class), resource);
     }
 

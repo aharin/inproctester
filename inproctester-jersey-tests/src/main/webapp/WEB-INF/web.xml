@@ -5,9 +5,9 @@
 		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          version="2.5">
 
-    <filter>
-        <filter-name>Jersey Filter</filter-name>
-        <filter-class>com.sun.jersey.spi.container.servlet.ServletContainer</filter-class>
+    <servlet>
+        <servlet-name>Jersey Servlet</servlet-name>
+        <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
         <init-param>
             <param-name>com.sun.jersey.config.feature.Redirect</param-name>
             <param-value>true</param-value>
@@ -24,9 +24,9 @@
             <param-name>com.sun.jersey.config.property.WebPageContentRegex</param-name>
             <param-value>/(images|css|jsp)/.*</param-value>
         </init-param>
-    </filter>
-    <filter-mapping>
-        <filter-name>Jersey Filter</filter-name>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Jersey Servlet</servlet-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>
+    </servlet-mapping>
 </web-app>

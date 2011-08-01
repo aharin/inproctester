@@ -1,6 +1,7 @@
 package com.thoughtworks.inproctester.jersey;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.test.framework.AppDescriptor;
 import com.sun.jersey.test.framework.WebAppDescriptor;
 import com.sun.jersey.test.framework.spi.container.TestContainer;
@@ -51,6 +52,7 @@ public class InProcessTestContainerFactory implements TestContainerFactory {
         final Map<String, String> contextParams;
 
         private HttpAppTester httpServer;
+        private ClientConfig clientConfig;
 
 
         private InprocessWebTestContainer(URI baseUri, WebAppDescriptor ad) {
@@ -69,6 +71,7 @@ public class InProcessTestContainerFactory implements TestContainerFactory {
             this.initParams = ad.getInitParams();
             this.contextParams = ad.getContextParams();
             this.eventListeners = ad.getListeners();
+            clientConfig = ad.getClientConfig();
 
             instantiateInprocessWebServer();
 
@@ -95,7 +98,7 @@ public class InProcessTestContainerFactory implements TestContainerFactory {
         }
 
         public Client getClient() {
-            return null;
+            return new Client(new InPocessClientHandler(baseUri, httpServer), clientConfig);
         }
 
         public URI getBaseUri() {
@@ -120,8 +123,9 @@ public class InProcessTestContainerFactory implements TestContainerFactory {
             httpServer = new HttpAppTester(contextPath);
 
             if (servletClass != null) {
-                httpServer.addServlet(servletClass, servletPath);
+                httpServer.addServlet(servletClass, "/*", initParams);
             }
+
         }
     }
 }

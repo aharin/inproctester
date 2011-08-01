@@ -30,36 +30,44 @@ public class UrlHelper {
     public static String getRequestPath(URL absoluteUrl) {
         try {
             URI uri = absoluteUrl.toURI();
-            String path = uri.getPath();
-            String query = uri.getQuery();
-            String fragment = uri.getFragment();
-
-            StringBuilder sb = new StringBuilder(path);
-            if (StringUtils.isNotEmpty(query)) {
-                sb.append("?").append(query);
-            }
-            if (StringUtils.isNotEmpty(fragment)) {
-                sb.append("#").append(fragment);
-            }
-            return sb.toString();
+            return getRequestPath(uri);
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
     }
 
+    public static String getRequestPath(URI uri) {
+        String path = uri.getPath();
+        String query = uri.getQuery();
+        String fragment = uri.getFragment();
+
+        StringBuilder sb = new StringBuilder(path);
+        if (StringUtils.isNotEmpty(query)) {
+            sb.append("?").append(query);
+        }
+        if (StringUtils.isNotEmpty(fragment)) {
+            sb.append("#").append(fragment);
+        }
+        return sb.toString();
+    }
+
     public static String getRequestHost(URL absoluteUrl) {
         try {
             URI uri = absoluteUrl.toURI();
-            String host = uri.getHost();
-            int port = uri.getPort();
-            StringBuilder sb = new StringBuilder(host);
-            if (port != -1) {
-                sb.append(":").append(port);
-            }
-            return sb.toString();
+            return getRequestHost(uri);
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String getRequestHost(URI uri) {
+        String host = uri.getHost();
+        int port = uri.getPort();
+        StringBuilder sb = new StringBuilder(host);
+        if (port != -1) {
+            sb.append(":").append(port);
+        }
+        return sb.toString();
     }
 
     public static String urlEncode(String value) {
