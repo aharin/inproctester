@@ -14,6 +14,7 @@
  */
 package com.thoughtworks.inproctester.jetty;
 
+import com.sun.tools.javac.util.Name;
 import org.eclipse.jetty.server.LocalConnector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ErrorHandler;
@@ -100,6 +101,10 @@ public class HttpAppTester {
 
     public void setResourceBase(String resourceBase) {
         context.setResourceBase(resourceBase);
+    }
+
+    public void setInitParameter(String name, String value) {
+        context.setInitParameter(name, value) ;
     }
 
     public void start() {
