@@ -56,19 +56,6 @@
         </dependency>
     </dependencies>
 
-    <repositories>
-        <repository>
-            <id>glassfish.java.net</id>
-            <name>GlassFish Maven Repository</name>
-            <url>http://download.java.net/maven/glassfish</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <id>m2.java.net</id>
-            <name>Java.net Maven 2 Repository</name>
-            <url>http://download.java.net/maven/2</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
+
 
 </project>

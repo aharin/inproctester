@@ -125,6 +125,23 @@ public class InProcessTestContainerFactory implements TestContainerFactory {
                 httpServer.addServlet(servletClass, servletPath, initParams);
             }
 
+            if (contextParams != null) {
+                for (Map.Entry<String, String> parameterEntry : contextParams.entrySet()) {
+                    httpServer.setInitParameter(parameterEntry.getKey(), parameterEntry.getValue());
+                }
+            }
+
+            if (eventListeners != null) {
+                for (Class<? extends EventListener> eventListener : eventListeners) {
+                    try {
+                        httpServer.addEventListener(eventListener.newInstance());
+                    } catch (InstantiationException e) {
+                        throw new RuntimeException(e);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
         }
     }
 }
