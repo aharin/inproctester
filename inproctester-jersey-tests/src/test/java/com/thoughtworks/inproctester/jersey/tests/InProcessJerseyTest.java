@@ -1,5 +1,6 @@
 package com.thoughtworks.inproctester.jersey.tests;
 
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
@@ -12,6 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
+import java.awt.*;
 
 public class InProcessJerseyTest extends JerseyTest {
 
@@ -36,10 +38,16 @@ public class InProcessJerseyTest extends JerseyTest {
 
 
     @Test
-    public void shouldGetResource() throws Exception {
+    public void shouldAddResource() throws Exception {
         WebResource webResource = resource();
-        JsonNode resource = webResource.path("/").accept(MediaType.APPLICATION_JSON_TYPE).get(JsonNode.class);
-        Assert.assertEquals(objectMapper.readValue("{\"id\":1, \"name\":\"test\"}", JsonNode.class), resource);
+        JsonNode testResource = objectMapper.readValue("{\"name\":\"test\"}", JsonNode.class);
+        ClientResponse createResponse = webResource.path("/").type(MediaType.APPLICATION_JSON).entity(testResource).post(ClientResponse.class);
+
+        Assert.assertEquals(201, createResponse.getStatus());
+        Assert.assertEquals(testResource, createResponse.getEntity(JsonNode.class));
+
+        JsonNode testResourceFromServer = webResource.uri(createResponse.getLocation()).accept(MediaType.APPLICATION_JSON).get(JsonNode.class);
+        Assert.assertEquals(testResource, testResourceFromServer);
     }
 
 

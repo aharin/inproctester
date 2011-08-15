@@ -17,25 +17,38 @@ package com.thoughtworks.inproctester.jersey.testapp;
 import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.List;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.util.HashMap;
+import java.util.Map;
 
 @Path("/")
 @Singleton
 public class TestApplication {
 
-    private List<TestResource> resources = new ArrayList<TestResource>();
+    private Map<Integer, TestResource> resources = new HashMap<Integer, TestResource>();
+
+    @Context
+    private UriInfo uriInfo;
 
     @GET
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public TestResource getResource() {
-        return new TestResource(1, "test");
+    public TestResource getResource(@PathParam("id") int id) {
+        return resources.get(id);
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void addResource(TestResource testResource) {
-        resources.add(testResource);
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addResource(TestResource testResource) {
+        int nextId = resources.size();
+        resources.put(nextId, testResource);
+        return Response
+                .created(uriInfo.getBaseUriBuilder().path(TestApplication.class, "getResource").build(nextId))
+                .entity(testResource)
+                .build();
     }
 }

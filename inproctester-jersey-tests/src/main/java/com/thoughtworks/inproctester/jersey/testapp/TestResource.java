@@ -1,21 +1,24 @@
 package com.thoughtworks.inproctester.jersey.testapp;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TestResource {
 
-    private int id;
     private String name;
 
-
-    public TestResource(int id, String name) {
-        this.id = id;
-        this.name = name;
+    public TestResource() {
     }
 
-    public int getId() {
-        return id;
+    public TestResource(String name) {
+        this.name = name;
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
