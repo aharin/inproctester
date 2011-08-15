@@ -12,20 +12,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.thoughtworks.inproctester.htmlunit;
-
-import org.apache.commons.codec.CharEncoding;
-import org.apache.commons.codec.net.URLCodec;
-import org.apache.commons.lang.StringUtils;
+package com.thoughtworks.inproctester.jetty;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 public class UrlHelper {
-
-    private static URLCodec urlCodec = new URLCodec();
 
     public static String getRequestPath(URL absoluteUrl) {
         try {
@@ -42,10 +37,10 @@ public class UrlHelper {
         String fragment = uri.getFragment();
 
         StringBuilder sb = new StringBuilder(path);
-        if (StringUtils.isNotEmpty(query)) {
+        if (query != null && query.length() > 0) {
             sb.append("?").append(query);
         }
-        if (StringUtils.isNotEmpty(fragment)) {
+        if (query != null && fragment.length() > 0) {
             sb.append("#").append(fragment);
         }
         return sb.toString();
@@ -72,7 +67,7 @@ public class UrlHelper {
 
     public static String urlEncode(String value) {
         try {
-            return urlCodec.encode(value, CharEncoding.UTF_8);
+            return URLEncoder.encode(value, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }

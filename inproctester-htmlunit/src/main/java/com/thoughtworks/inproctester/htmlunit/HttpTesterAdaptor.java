@@ -19,6 +19,7 @@ import com.gargoylesoftware.htmlunit.HttpMethod;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponseData;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
+import com.thoughtworks.inproctester.jetty.UrlHelper;
 import org.eclipse.jetty.testing.HttpTester;
 
 import java.io.IOException;

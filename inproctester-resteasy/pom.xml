@@ -7,22 +7,16 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.thoughtworks.inproctester</groupId>
-    <artifactId>inproctester-jersey</artifactId>
-    <name>In Process Tester :: Jersey</name>
+    <artifactId>inproctester-resteasy</artifactId>
+    <name>In Process Tester :: Resteasy</name>
     <packaging>jar</packaging>
 
     <dependencies>
 
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>1.9-ea04</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sun.jersey.jersey-test-framework</groupId>
-            <artifactId>jersey-test-framework-core</artifactId>
-            <version>1.9-ea04</version>
+       <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jaxrs</artifactId>
+            <version>2.2.2.GA</version>
         </dependency>
 
 

@@ -20,9 +20,9 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.TerminatingClientHandler;
 import com.sun.jersey.api.container.ContainerException;
 import com.sun.jersey.core.header.InBoundHeaders;
-import com.thoughtworks.inproctester.htmlunit.UrlHelper;
 import com.thoughtworks.inproctester.jetty.HttpAppTester;
 import com.thoughtworks.inproctester.jetty.HttpAppTesterExtensions;
+import com.thoughtworks.inproctester.jetty.UrlHelper;
 import org.eclipse.jetty.testing.HttpTester;
 
 import javax.ws.rs.core.MultivaluedMap;
