@@ -1,3 +1,17 @@
+/*  Copyright 2011 ThoughtWorks Ltd
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package com.thoughtworks.inproctester.jersey;
 
 import com.sun.jersey.api.client.ClientHandlerException;
@@ -6,8 +20,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.TerminatingClientHandler;
 import com.sun.jersey.api.container.ContainerException;
 import com.sun.jersey.core.header.InBoundHeaders;
-import com.sun.jersey.spi.container.ContainerResponse;
-import com.sun.jersey.spi.container.ContainerResponseWriter;
 import com.thoughtworks.inproctester.htmlunit.UrlHelper;
 import com.thoughtworks.inproctester.jetty.HttpAppTester;
 import com.thoughtworks.inproctester.jetty.HttpAppTesterExtensions;
@@ -15,7 +27,6 @@ import org.eclipse.jetty.testing.HttpTester;
 
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.*;
-import java.net.URI;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
@@ -23,25 +34,10 @@ import java.util.Map;
 public class InPocessClientHandler extends TerminatingClientHandler {
     private final HttpAppTester w;
 
-    private final URI baseUri;
-
-    public InPocessClientHandler(URI baseUri, HttpAppTester appTester) {
-        this.baseUri = baseUri;
+    public InPocessClientHandler(HttpAppTester appTester) {
         this.w = appTester;
     }
 
-
-    private static class TestContainerResponseWriter implements ContainerResponseWriter {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-        public OutputStream writeStatusAndHeaders(long contentLength,
-                                                  ContainerResponse response) throws IOException {
-            return baos;
-        }
-
-        public void finish() throws IOException {
-        }
-    }
 
     public ClientResponse handle(ClientRequest clientRequest) {
         byte[] requestEntity = writeRequestEntity(clientRequest);
@@ -64,7 +60,7 @@ public class InPocessClientHandler extends TerminatingClientHandler {
             throw new ContainerException(e);
         }
 
-        ClientResponse clientResponse = null;
+        ClientResponse clientResponse;
         try {
             clientResponse = new ClientResponse(
                     cResponse.getStatus(),
