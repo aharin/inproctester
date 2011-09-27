@@ -3,6 +3,7 @@ package com.thoughtworks.inproctester.resteasy;
 import com.thoughtworks.inproctester.jetty.HttpAppTester;
 import com.thoughtworks.inproctester.jetty.HttpAppTesterExtensions;
 import com.thoughtworks.inproctester.jetty.UrlHelper;
+import org.eclipse.jetty.http.HttpException;
 import org.eclipse.jetty.testing.HttpTester;
 import org.jboss.resteasy.client.ClientExecutor;
 import org.jboss.resteasy.client.ClientRequest;
@@ -15,18 +16,26 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 import java.io.*;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
 public class InProcessClientExecutor implements ClientExecutor {
 
-    private final HttpAppTester httpAppTester;
+    private List<TesterRoute> testerRoutes = new ArrayList<TesterRoute>();
 
-    public InProcessClientExecutor(HttpAppTester httpAppTester) {
-        this.httpAppTester = httpAppTester;
+    public InProcessClientExecutor() {
     }
 
+    public InProcessClientExecutor(final HttpAppTester httpAppTester) {
+        addTesterRoute(new AnyRouteMatcher(), httpAppTester);
+    }
+
+    public InProcessClientExecutor addTesterRoute(RouteMatcher routeMatcher, HttpAppTester tester) {
+        testerRoutes.add(new TesterRoute(routeMatcher, tester));
+        return this;
+    }
 
     public ClientRequest createRequest(String uriTemplate) {
         return new ClientRequest(uriTemplate, this);
@@ -46,9 +55,9 @@ public class InProcessClientExecutor implements ClientExecutor {
         loadContent(clientRequest, testerRequest);
         writeOutBoundHeaders(clientRequest.getHeaders(), testerRequest);
 
-        final HttpTester testerResponse = HttpAppTesterExtensions.processRequest(httpAppTester, testerRequest);
+        final HttpTester testerResponse = HttpAppTesterExtensions.processRequest(routeToTesterApplication(requestUri), testerRequest);
 
-        BaseClientResponse clientResponse = new BaseClientResponse(new BaseClientResponse.BaseClientResponseStreamFactory() {
+        BaseClientResponse<?> clientResponse = new BaseClientResponse(new BaseClientResponse.BaseClientResponseStreamFactory() {
             InputStream stream;
 
             public InputStream getInputStream() throws IOException {
@@ -70,6 +79,15 @@ public class InProcessClientExecutor implements ClientExecutor {
         clientResponse.setProviderFactory(clientRequest.getProviderFactory());
 
         return clientResponse;
+    }
+
+    private HttpAppTester routeToTesterApplication(URI requestUri) throws HttpException {
+        for (TesterRoute route : testerRoutes) {
+            if (route.matches(requestUri)) {
+                return route.getHttpAppTester();
+            }
+        }
+        throw new HttpException(404, "Unknown Route: " + requestUri);
     }
 
     private void loadContent(ClientRequest clientRequest, HttpTester testerRequest) throws IOException {
