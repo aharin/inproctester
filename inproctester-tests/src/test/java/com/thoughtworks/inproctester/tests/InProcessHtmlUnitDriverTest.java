@@ -84,6 +84,21 @@ public class InProcessHtmlUnitDriverTest {
     }
 
     @Test
+    public void shouldSupportUtfEncodedData() {
+
+        WebDriver htmlUnitDriver = new InProcessHtmlUnitDriver(httpAppTester);
+
+        htmlUnitDriver.get("http://localhost/contacts/add");
+
+        htmlUnitDriver.findElement(By.name("contactName")).sendKeys("Имя Контакта");
+        htmlUnitDriver.findElement(By.tagName("form")).submit();
+
+        assertThat(htmlUnitDriver.findElement(By.name("contactName")).getAttribute("value"), is("Имя Контакта"));
+
+    }
+
+
+    @Test
     public void shouldSupportCookies() {
         WebDriver htmlUnitDriver = new InProcessHtmlUnitDriver(httpAppTester);
         htmlUnitDriver.manage().deleteAllCookies();

@@ -14,13 +14,14 @@
  */
 package com.thoughtworks.inproctester.jetty;
 
-import com.sun.tools.javac.util.Name;
+import org.eclipse.jetty.io.ByteArrayBuffer;
 import org.eclipse.jetty.server.LocalConnector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ErrorHandler;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.StringUtil;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 import javax.servlet.Filter;
@@ -104,7 +105,7 @@ public class HttpAppTester {
     }
 
     public void setInitParameter(String name, String value) {
-        context.setInitParameter(name, value) ;
+        context.setInitParameter(name, value);
     }
 
     public void start() {
@@ -129,7 +130,8 @@ public class HttpAppTester {
 
     public String getResponses(String rawRequests) {
         try {
-            return connector.getResponses(rawRequests);
+            ByteArrayBuffer result = connector.getResponses(new ByteArrayBuffer(rawRequests, StringUtil.__UTF8), false);
+            return result == null ? null : result.toString(StringUtil.__UTF8);
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
