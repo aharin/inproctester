@@ -31,7 +31,6 @@ import java.util.HashMap;
 
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.text.IsEmptyString.isEmptyString;
 import static org.junit.Assert.assertThat;
 
 public class InProcessHtmlUnitDriverTest {
@@ -73,7 +72,7 @@ public class InProcessHtmlUnitDriverTest {
         assertThat(htmlUnitDriver.findElement(By.tagName("h3")).getText(), is("Contact Details"));
         WebElement contactNameElement = htmlUnitDriver.findElement(By.name("contactName"));
 
-        assertThat(contactNameElement.getAttribute("value"), isEmptyString());
+        contactNameElement.clear();
         contactNameElement.sendKeys("My Contact");
 
         htmlUnitDriver.findElement(By.tagName("form")).submit();
@@ -89,8 +88,9 @@ public class InProcessHtmlUnitDriverTest {
         WebDriver htmlUnitDriver = new InProcessHtmlUnitDriver(httpAppTester);
 
         htmlUnitDriver.get("http://localhost/contacts/add");
-
-        htmlUnitDriver.findElement(By.name("contactName")).sendKeys("Имя Контакта");
+        WebElement contactNameElement = htmlUnitDriver.findElement(By.name("contactName"));
+        contactNameElement.clear();
+        contactNameElement.sendKeys("Имя Контакта");
         htmlUnitDriver.findElement(By.tagName("form")).submit();
 
         assertThat(htmlUnitDriver.findElement(By.name("contactName")).getAttribute("value"), is("Имя Контакта"));
