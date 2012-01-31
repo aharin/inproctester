@@ -40,7 +40,7 @@ public class UrlHelper {
         if (query != null && query.length() > 0) {
             sb.append("?").append(query);
         }
-        if (query != null && fragment.length() > 0) {
+        if (fragment != null && fragment.length() > 0) {
             sb.append("#").append(fragment);
         }
         return sb.toString();
