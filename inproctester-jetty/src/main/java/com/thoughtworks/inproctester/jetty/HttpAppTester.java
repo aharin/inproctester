@@ -29,22 +29,20 @@ import javax.servlet.Servlet;
 import java.util.EventListener;
 import java.util.Map;
 
-public class HttpAppTester {
+public class HttpAppTester implements InProcServer {
 
-    private Server server;
-    private LocalConnector connector;
+    private InProcServer inProcServer;
+
     private ServletContextHandler context;
 
     public HttpAppTester(String webApp, String contextPath) {
-        server = new Server();
-        connector = new LocalConnector();
         context = createWebAppContext(webApp, contextPath);
 
+        Server server = new Server();
         server.addBean(new ErrorHandler());
         server.setSendServerVersion(false);
-        server.addConnector(connector);
         server.setHandler(context);
-
+        inProcServer = new InProcServerAdapter(server);
     }
 
     private WebAppContext createWebAppContext(String webApp, String contextPath) {
@@ -60,16 +58,13 @@ public class HttpAppTester {
     }
 
     public HttpAppTester(String contextPath) {
-        server = new Server();
-        connector = new LocalConnector();
         context = createServletContextHandler(contextPath);
 
-
+        Server server = new Server();
         server.addBean(new ErrorHandler());
         server.setSendServerVersion(false);
-        server.addConnector(connector);
         server.setHandler(context);
-
+        inProcServer = new InProcServerAdapter(server);
     }
 
     private ServletContextHandler createServletContextHandler(String contextPath) {
@@ -109,33 +104,14 @@ public class HttpAppTester {
     }
 
     public void start() {
-        try {
-            server.start();
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        inProcServer.start();
     }
 
     public void stop() {
-        try {
-            server.stop();
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        inProcServer.stop();
     }
 
     public String getResponses(String rawRequests) {
-        try {
-            ByteArrayBuffer result = connector.getResponses(new ByteArrayBuffer(rawRequests, StringUtil.__UTF8), false);
-            return result == null ? null : result.toString(StringUtil.__UTF8);
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return inProcServer.getResponses(rawRequests);
     }
 }

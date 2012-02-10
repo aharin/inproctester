@@ -1,20 +1,20 @@
 package com.thoughtworks.inproctester.resteasy;
 
-import com.thoughtworks.inproctester.jetty.HttpAppTester;
+import com.thoughtworks.inproctester.jetty.InProcServer;
 
 import java.net.URI;
 
 public class TesterRoute {
     private RouteMatcher routeMatcher;
-    private HttpAppTester httpAppTester;
+    private InProcServer inProcServer;
 
-    public TesterRoute(RouteMatcher routeMatcher, HttpAppTester httpAppTester) {
+    public TesterRoute(RouteMatcher routeMatcher, InProcServer inProcServer) {
         this.routeMatcher = routeMatcher;
-        this.httpAppTester = httpAppTester;
+        this.inProcServer = inProcServer;
     }
 
-    public HttpAppTester getHttpAppTester() {
-        return httpAppTester;
+    public InProcServer getInProcServer() {
+        return inProcServer;
     }
 
     public boolean matches(URI requestUri) {
