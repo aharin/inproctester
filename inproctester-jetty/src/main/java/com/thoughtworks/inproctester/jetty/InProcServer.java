@@ -12,17 +12,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.thoughtworks.inproctester.webdriver;
+package com.thoughtworks.inproctester.jetty;
 
-import com.thoughtworks.inproctester.htmlunit.InProcessWebConnection;
-import com.thoughtworks.inproctester.jetty.InProcServer;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-
-public class InProcessHtmlUnitDriver extends HtmlUnitDriver {
-
-
-    public InProcessHtmlUnitDriver(InProcServer inProcServer) {
-        getWebClient().setWebConnection(new InProcessWebConnection(inProcServer, getWebClient().getCookieManager()));
-    }
-
+public interface InProcServer {
+    void start();
+    void stop();
+    String getResponses(String rawRequests);
 }
