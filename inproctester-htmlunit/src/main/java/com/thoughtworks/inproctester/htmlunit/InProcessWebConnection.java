@@ -16,7 +16,7 @@ package com.thoughtworks.inproctester.htmlunit;
 
 import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.util.Cookie;
-import com.thoughtworks.inproctester.jetty.HttpAppTester;
+import com.thoughtworks.inproctester.jetty.InProcConnection;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.testing.HttpTester;
 
@@ -29,11 +29,11 @@ import static com.thoughtworks.inproctester.jetty.HttpAppTesterExtensions.proces
 
 public class InProcessWebConnection implements WebConnection {
     private CookieManager cookieManager;
-    private HttpAppTester appTester;
+    private InProcConnection inProcConnection;
     private CookieParser cookieParser = new CookieParser();
 
-    public InProcessWebConnection(HttpAppTester appTester, CookieManager cookieManager) {
-        this.appTester = appTester;
+    public InProcessWebConnection(InProcConnection inProcConnection, CookieManager cookieManager) {
+        this.inProcConnection = inProcConnection;
         this.cookieManager = cookieManager;
     }
 
@@ -44,7 +44,7 @@ public class InProcessWebConnection implements WebConnection {
 
     private HttpTester processTesterRequest(HttpTester testerRequest) throws IOException {
         addCookiesToRequest(testerRequest);
-        HttpTester testerResponse = processRequest(appTester, testerRequest);
+        HttpTester testerResponse = processRequest(inProcConnection, testerRequest);
         storeCookiesFromResponse(testerRequest, testerResponse);
         return testerResponse;
     }
