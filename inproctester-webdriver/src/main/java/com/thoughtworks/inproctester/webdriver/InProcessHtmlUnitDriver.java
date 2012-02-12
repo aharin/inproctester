@@ -14,15 +14,15 @@
  */
 package com.thoughtworks.inproctester.webdriver;
 
+import com.thoughtworks.inproctester.jetty.HttpAppTester;
 import com.thoughtworks.inproctester.htmlunit.InProcessWebConnection;
-import com.thoughtworks.inproctester.jetty.InProcServer;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 public class InProcessHtmlUnitDriver extends HtmlUnitDriver {
 
 
-    public InProcessHtmlUnitDriver(InProcServer inProcServer) {
-        getWebClient().setWebConnection(new InProcessWebConnection(inProcServer, getWebClient().getCookieManager()));
+    public InProcessHtmlUnitDriver(HttpAppTester httpAppTester) {
+        getWebClient().setWebConnection(new InProcessWebConnection(httpAppTester, getWebClient().getCookieManager()));
     }
 
 }

@@ -1,7 +1,7 @@
 package com.thoughtworks.inproctester.resteasy;
 
-import com.thoughtworks.inproctester.jetty.InProcServerExtensions;
-import com.thoughtworks.inproctester.jetty.InProcServer;
+import com.thoughtworks.inproctester.jetty.HttpAppTester;
+import com.thoughtworks.inproctester.jetty.HttpAppTesterExtensions;
 import com.thoughtworks.inproctester.jetty.UrlHelper;
 import org.eclipse.jetty.http.HttpException;
 import org.eclipse.jetty.testing.HttpTester;
@@ -28,12 +28,12 @@ public class InProcessClientExecutor implements ClientExecutor {
     public InProcessClientExecutor() {
     }
 
-    public InProcessClientExecutor(final InProcServer inProcServer) {
-        addTesterRoute(new AnyRouteMatcher(), inProcServer);
+    public InProcessClientExecutor(final HttpAppTester httpAppTester) {
+        addTesterRoute(new AnyRouteMatcher(), httpAppTester);
     }
 
-    public InProcessClientExecutor addTesterRoute(RouteMatcher routeMatcher, InProcServer inProcServer) {
-        testerRoutes.add(new TesterRoute(routeMatcher, inProcServer));
+    public InProcessClientExecutor addTesterRoute(RouteMatcher routeMatcher, HttpAppTester tester) {
+        testerRoutes.add(new TesterRoute(routeMatcher, tester));
         return this;
     }
 
@@ -55,7 +55,7 @@ public class InProcessClientExecutor implements ClientExecutor {
         loadContent(clientRequest, testerRequest);
         writeOutBoundHeaders(clientRequest.getHeaders(), testerRequest);
 
-        final HttpTester testerResponse = InProcServerExtensions.processRequest(routeToTesterApplication(requestUri), testerRequest);
+        final HttpTester testerResponse = HttpAppTesterExtensions.processRequest(routeToTesterApplication(requestUri), testerRequest);
 
         BaseClientResponse<?> clientResponse = new BaseClientResponse(new BaseClientResponse.BaseClientResponseStreamFactory() {
             InputStream stream;
@@ -81,10 +81,10 @@ public class InProcessClientExecutor implements ClientExecutor {
         return clientResponse;
     }
 
-    private InProcServer routeToTesterApplication(URI requestUri) throws HttpException {
+    private HttpAppTester routeToTesterApplication(URI requestUri) throws HttpException {
         for (TesterRoute route : testerRoutes) {
             if (route.matches(requestUri)) {
-                return route.getInProcServer();
+                return route.getHttpAppTester();
             }
         }
         throw new HttpException(404, "Unknown Route: " + requestUri);

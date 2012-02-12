@@ -20,8 +20,8 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.TerminatingClientHandler;
 import com.sun.jersey.api.container.ContainerException;
 import com.sun.jersey.core.header.InBoundHeaders;
-import com.thoughtworks.inproctester.jetty.InProcServerExtensions;
-import com.thoughtworks.inproctester.jetty.InProcServer;
+import com.thoughtworks.inproctester.jetty.HttpAppTester;
+import com.thoughtworks.inproctester.jetty.HttpAppTesterExtensions;
 import com.thoughtworks.inproctester.jetty.UrlHelper;
 import org.eclipse.jetty.testing.HttpTester;
 
@@ -32,10 +32,10 @@ import java.util.List;
 import java.util.Map;
 
 public class InPocessClientHandler extends TerminatingClientHandler {
-    private final InProcServer w;
+    private final HttpAppTester w;
 
-    public InPocessClientHandler(InProcServer inProcServer) {
-        this.w = inProcServer;
+    public InPocessClientHandler(HttpAppTester appTester) {
+        this.w = appTester;
     }
 
 
@@ -55,7 +55,7 @@ public class InPocessClientHandler extends TerminatingClientHandler {
 
         HttpTester cResponse;
         try {
-            cResponse = InProcServerExtensions.processRequest(w, cRequest);
+            cResponse = HttpAppTesterExtensions.processRequest(w, cRequest);
         } catch (IOException e) {
             throw new ContainerException(e);
         }
