@@ -29,22 +29,22 @@ import javax.servlet.Servlet;
 import java.util.EventListener;
 import java.util.Map;
 
-public class HttpAppTester {
+public class HttpAppTester implements InProcConnection {
 
     private Server server;
-    private LocalConnector connector;
+    private LocalConnection localConnection;
     private ServletContextHandler context;
 
     public HttpAppTester(String webApp, String contextPath) {
         server = new Server();
-        connector = new LocalConnector();
+        LocalConnector connector = new LocalConnector();
         context = createWebAppContext(webApp, contextPath);
 
         server.addBean(new ErrorHandler());
         server.setSendServerVersion(false);
         server.addConnector(connector);
         server.setHandler(context);
-
+        localConnection = new LocalConnection(connector);
     }
 
     private WebAppContext createWebAppContext(String webApp, String contextPath) {
@@ -61,7 +61,7 @@ public class HttpAppTester {
 
     public HttpAppTester(String contextPath) {
         server = new Server();
-        connector = new LocalConnector();
+        LocalConnector connector = new LocalConnector();
         context = createServletContextHandler(contextPath);
 
 
@@ -69,7 +69,7 @@ public class HttpAppTester {
         server.setSendServerVersion(false);
         server.addConnector(connector);
         server.setHandler(context);
-
+        localConnection = new LocalConnection(connector);
     }
 
     private ServletContextHandler createServletContextHandler(String contextPath) {
@@ -128,14 +128,8 @@ public class HttpAppTester {
         }
     }
 
+    @Override
     public String getResponses(String rawRequests) {
-        try {
-            ByteArrayBuffer result = connector.getResponses(new ByteArrayBuffer(rawRequests, StringUtil.__UTF8), false);
-            return result == null ? null : result.toString(StringUtil.__UTF8);
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+      return localConnection.getResponses(rawRequests);
     }
 }
