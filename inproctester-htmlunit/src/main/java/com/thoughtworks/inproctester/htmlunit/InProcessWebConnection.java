@@ -17,6 +17,7 @@ package com.thoughtworks.inproctester.htmlunit;
 import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.util.Cookie;
 import com.thoughtworks.inproctester.jetty.InProcConnection;
+import com.thoughtworks.inproctester.jetty.InProcRequest;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.testing.HttpTester;
 
@@ -42,14 +43,14 @@ public class InProcessWebConnection implements WebConnection {
         return new WebResponse(adaptResponse(processTesterRequest(adaptRequest(webRequest))), webRequest, 0);
     }
 
-    private HttpTester processTesterRequest(HttpTester testerRequest) throws IOException {
-        addCookiesToRequest(testerRequest);
-        HttpTester testerResponse = processRequest(inProcConnection, testerRequest);
-        storeCookiesFromResponse(testerRequest, testerResponse);
+    private HttpTester processTesterRequest(InProcRequest inProcRequest) throws IOException {
+        addCookiesToRequest(inProcRequest);
+        HttpTester testerResponse = processRequest(inProcConnection, inProcRequest);
+        storeCookiesFromResponse(inProcRequest, testerResponse);
         return testerResponse;
     }
 
-    private void storeCookiesFromResponse(HttpTester testerRequest, HttpTester testerResponse) {
+    private void storeCookiesFromResponse(InProcRequest testerRequest, HttpTester testerResponse) {
         String requestHostName = testerRequest.getHeader("Host").split(":", 1)[0];
         Enumeration headerNames = testerResponse.getHeaderNames();
         while (headerNames.hasMoreElements()) {
@@ -80,7 +81,7 @@ public class InProcessWebConnection implements WebConnection {
         }
     }
 
-    private void addCookiesToRequest(HttpTester httpTester) {
+    private void addCookiesToRequest(InProcRequest httpTester) {
         Set<Cookie> cookies = cookieManager.getCookies();
         if (!cookies.isEmpty()) {
             List<String> cookieStrings = new ArrayList<String>();

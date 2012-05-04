@@ -14,18 +14,14 @@
  */
 package com.thoughtworks.inproctester.htmlunit;
 
-import com.gargoylesoftware.htmlunit.FormEncodingType;
-import com.gargoylesoftware.htmlunit.HttpMethod;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponseData;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
-import com.thoughtworks.inproctester.jetty.UrlHelper;
+import com.thoughtworks.inproctester.jetty.InProcRequest;
 import org.eclipse.jetty.testing.HttpTester;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 
 public class HttpTesterAdaptor {
     static WebResponseData adaptResponse(HttpTester httpTester) throws IOException {
@@ -44,18 +40,8 @@ public class HttpTesterAdaptor {
         return new WebResponseData(content.getBytes(httpTester.getCharacterEncoding()), httpTester.getStatus(), httpTester.getReason(), headers);
     }
 
-    static HttpTester adaptRequest(WebRequest request) {
-        HttpTester httpTester = new HttpTester();
-        httpTester.setMethod(request.getHttpMethod().name());
-        httpTester.setURI(UrlHelper.getRequestPath(request.getUrl()));
-        httpTester.addHeader("Host", UrlHelper.getRequestHost(request.getUrl()));
-
-        if (request.getHttpMethod() == HttpMethod.POST) {
-            httpTester.setHeader("Content-Type", request.getEncodingType().getName());
-            if (request.getEncodingType() == FormEncodingType.URL_ENCODED) {
-                httpTester.setContent(new UrlEncodedContent(request.getRequestParameters()).generateFormDataAsString());
-            }
-        }
-        return httpTester;
+    static InProcRequest adaptRequest(WebRequest request) {
+        return new HtmlUnitInProcRequest(request);
     }
+
 }

@@ -15,5 +15,5 @@
 package com.thoughtworks.inproctester.jetty;
 
 public interface InProcConnection {
-  String getResponses(String rawRequests);
+  String getResponses(InProcRequest rawRequests);
 }

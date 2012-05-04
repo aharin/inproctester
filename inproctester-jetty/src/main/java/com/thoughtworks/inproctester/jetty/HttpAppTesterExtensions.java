@@ -19,8 +19,8 @@ import org.eclipse.jetty.testing.HttpTester;
 import java.io.IOException;
 
 public class HttpAppTesterExtensions {
-    public static HttpTester processRequest(InProcConnection inProcConnection, HttpTester testerRequest) throws IOException {
-        String rawResponse = inProcConnection.getResponses(testerRequest.generate());
+    public static HttpTester processRequest(InProcConnection inProcConnection, InProcRequest testerRequest) throws IOException {
+        String rawResponse = inProcConnection.getResponses(testerRequest);
         HttpTester testerResponse = new HttpTester();
         testerResponse.parse(rawResponse);
         return testerResponse;

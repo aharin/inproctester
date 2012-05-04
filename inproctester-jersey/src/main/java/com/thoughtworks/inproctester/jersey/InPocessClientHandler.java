@@ -14,22 +14,19 @@
  */
 package com.thoughtworks.inproctester.jersey;
 
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.ClientRequest;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.TerminatingClientHandler;
+import com.sun.jersey.api.client.*;
 import com.sun.jersey.api.container.ContainerException;
 import com.sun.jersey.core.header.InBoundHeaders;
 import com.thoughtworks.inproctester.jetty.HttpAppTester;
 import com.thoughtworks.inproctester.jetty.HttpAppTesterExtensions;
+import com.thoughtworks.inproctester.jetty.InProcRequest;
 import com.thoughtworks.inproctester.jetty.UrlHelper;
 import org.eclipse.jetty.testing.HttpTester;
 
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.*;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
+import java.net.URI;
+import java.util.*;
 
 public class InPocessClientHandler extends TerminatingClientHandler {
     private final HttpAppTester w;
@@ -38,20 +35,8 @@ public class InPocessClientHandler extends TerminatingClientHandler {
         this.w = appTester;
     }
 
-
     public ClientResponse handle(ClientRequest clientRequest) {
-        byte[] requestEntity = writeRequestEntity(clientRequest);
-
-        final HttpTester cRequest = new HttpTester();
-        cRequest.setMethod(clientRequest.getMethod());
-        cRequest.setURI(UrlHelper.getRequestPath(clientRequest.getURI()));
-        cRequest.addHeader("Host", UrlHelper.getRequestHost(clientRequest.getURI()));
-        try {
-            cRequest.setContent(new String(requestEntity, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new ContainerException(e);
-        }
-        writeOutBoundHeaders(clientRequest.getHeaders(), cRequest);
+        final InProcRequest cRequest = new JerseyClientInprocRequest(clientRequest);
 
         HttpTester cResponse;
         try {
@@ -80,14 +65,6 @@ public class InPocessClientHandler extends TerminatingClientHandler {
         return contentString.getBytes(cResponse.getCharacterEncoding());
     }
 
-    private void writeOutBoundHeaders(MultivaluedMap<String, Object> headers, HttpTester uc) {
-        for (Map.Entry<String, List<Object>> e : headers.entrySet()) {
-            for (Object v : e.getValue()) {
-                uc.addHeader(e.getKey(), ClientRequest.getHeaderValue(v));
-            }
-        }
-    }
-
     private InBoundHeaders getInBoundHeaders(HttpTester httpTester) {
         InBoundHeaders headers = new InBoundHeaders();
         Enumeration headerNames = httpTester.getHeaderNames();
@@ -102,22 +79,80 @@ public class InPocessClientHandler extends TerminatingClientHandler {
         return headers;
     }
 
-    private byte[] writeRequestEntity(ClientRequest ro) {
-        try {
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            writeRequestEntity(ro, new RequestEntityWriterListener() {
+    class JerseyClientInprocRequest implements InProcRequest {
+        private Map<String, String> headers = new HashMap<String, String>();
+        private ClientRequest clientRequest;
 
-                public void onRequestEntitySize(long size) throws IOException {
-                }
-
-                public OutputStream onGetOutputStream() throws IOException {
-                    return baos;
-                }
-            });
-            return baos.toByteArray();
-        } catch (IOException ex) {
-            throw new ClientHandlerException(ex);
+        public JerseyClientInprocRequest(ClientRequest clientRequest) {
+            this.clientRequest = clientRequest;
+            headers.put("Host", UrlHelper.getRequestHost(clientRequest.getURI()));
+            headers.putAll(asMap(clientRequest.getHeaders()));
         }
-    }
 
+
+        @Override
+        public String getHttpMethod() {
+            return clientRequest.getMethod();
+        }
+
+        @Override
+        public URI getUri() {
+            return clientRequest.getURI();
+        }
+
+        @Override
+        public String getFormData() {
+            byte[] requestEntity = writeRequestEntity(clientRequest);
+
+            try {
+                return new String(requestEntity, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new ContainerException(e);
+            }
+        }
+
+        @Override
+        public String getHeader(String headerName) {
+            return headers.get(headerName);
+        }
+
+        @Override
+        public Set<String> getHeaderNames() {
+            return headers.keySet();
+        }
+
+        @Override
+        public void addHeader(String headerName, String header) {
+            headers.put(headerName, header);
+        }
+
+        private Map<String, String> asMap(MultivaluedMap<String, Object> headers) {
+            HashMap<String, String> map = new HashMap<String, String>();
+            for (Map.Entry<String, List<Object>> e : headers.entrySet()) {
+                for (Object v : e.getValue()) {
+                    map.put(e.getKey(), ClientRequest.getHeaderValue(v));
+                }
+            }
+            return map;
+        }
+
+        private byte[] writeRequestEntity(ClientRequest ro) {
+            try {
+                final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                InPocessClientHandler.this.writeRequestEntity(ro, new RequestWriter.RequestEntityWriterListener() {
+
+                    public void onRequestEntitySize(long size) throws IOException {
+                    }
+
+                    public OutputStream onGetOutputStream() throws IOException {
+                        return baos;
+                    }
+                });
+                return baos.toByteArray();
+            } catch (IOException ex) {
+                throw new ClientHandlerException(ex);
+            }
+        }
+
+    }
 }

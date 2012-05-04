@@ -14,14 +14,12 @@
  */
 package com.thoughtworks.inproctester.jetty;
 
-import org.eclipse.jetty.io.ByteArrayBuffer;
 import org.eclipse.jetty.server.LocalConnector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ErrorHandler;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.util.StringUtil;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 import javax.servlet.Filter;
@@ -129,7 +127,7 @@ public class HttpAppTester implements InProcConnection {
     }
 
     @Override
-    public String getResponses(String rawRequests) {
-      return localConnection.getResponses(rawRequests);
+    public String getResponses(InProcRequest inProcRequest) {
+      return localConnection.getResponses(inProcRequest);
     }
 }
