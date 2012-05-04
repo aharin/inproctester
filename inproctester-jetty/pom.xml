@@ -15,6 +15,12 @@
     <dependencies>
 
          <dependency>
+            <groupId>com.thoughtworks.inproctester</groupId>
+            <artifactId>inproctester-core</artifactId>
+            <version>1.0.13-SNAPSHOT</version>
+        </dependency>
+
+         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>test-jetty-servlet</artifactId>
             <version>7.4.2.v20110526</version>

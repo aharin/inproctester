@@ -17,7 +17,7 @@ package com.thoughtworks.inproctester.htmlunit;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponseData;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
-import com.thoughtworks.inproctester.jetty.InProcRequest;
+import com.thoughtworks.inproctester.core.InProcRequest;
 import org.eclipse.jetty.testing.HttpTester;
 
 import java.io.IOException;

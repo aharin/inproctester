@@ -1,8 +1,8 @@
 package com.thoughtworks.inproctester.resteasy;
 
+import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.jetty.HttpAppTester;
 import com.thoughtworks.inproctester.jetty.HttpAppTesterExtensions;
-import com.thoughtworks.inproctester.jetty.InProcRequest;
 import org.eclipse.jetty.http.HttpException;
 import org.eclipse.jetty.testing.HttpTester;
 import org.jboss.resteasy.client.ClientExecutor;

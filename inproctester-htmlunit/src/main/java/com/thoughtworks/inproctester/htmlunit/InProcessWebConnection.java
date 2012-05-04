@@ -16,8 +16,8 @@ package com.thoughtworks.inproctester.htmlunit;
 
 import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.util.Cookie;
-import com.thoughtworks.inproctester.jetty.InProcConnection;
-import com.thoughtworks.inproctester.jetty.InProcRequest;
+import com.thoughtworks.inproctester.core.InProcConnection;
+import com.thoughtworks.inproctester.core.InProcRequest;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.testing.HttpTester;
 

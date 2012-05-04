@@ -14,8 +14,8 @@
  */
 package com.thoughtworks.inproctester.webdriver;
 
+import com.thoughtworks.inproctester.core.InProcConnection;
 import com.thoughtworks.inproctester.htmlunit.InProcessWebConnection;
-import com.thoughtworks.inproctester.jetty.InProcConnection;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 public class InProcessHtmlUnitDriver extends HtmlUnitDriver {

@@ -14,6 +14,8 @@
  */
 package com.thoughtworks.inproctester.jetty;
 
+import com.thoughtworks.inproctester.core.InProcConnection;
+import com.thoughtworks.inproctester.core.InProcRequest;
 import org.eclipse.jetty.server.LocalConnector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ErrorHandler;

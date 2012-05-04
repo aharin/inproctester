@@ -1,7 +1,7 @@
 package com.thoughtworks.inproctester.htmlunit;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
-import com.thoughtworks.inproctester.jetty.InProcRequest;
+import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.jetty.UrlHelper;
 
 import java.net.URI;

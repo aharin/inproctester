@@ -1,4 +1,4 @@
-package com.thoughtworks.inproctester.jetty;
+package com.thoughtworks.inproctester.core;
 
 import java.net.URI;
 import java.util.Set;

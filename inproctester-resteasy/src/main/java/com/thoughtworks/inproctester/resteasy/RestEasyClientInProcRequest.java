@@ -1,6 +1,6 @@
 package com.thoughtworks.inproctester.resteasy;
 
-import com.thoughtworks.inproctester.jetty.InProcRequest;
+import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.jetty.UrlHelper;
 import org.jboss.resteasy.client.ClientRequest;
 

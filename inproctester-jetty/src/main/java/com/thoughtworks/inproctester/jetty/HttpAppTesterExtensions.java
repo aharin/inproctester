@@ -14,6 +14,8 @@
  */
 package com.thoughtworks.inproctester.jetty;
 
+import com.thoughtworks.inproctester.core.InProcConnection;
+import com.thoughtworks.inproctester.core.InProcRequest;
 import org.eclipse.jetty.testing.HttpTester;
 
 import java.io.IOException;

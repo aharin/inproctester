@@ -17,9 +17,9 @@ package com.thoughtworks.inproctester.jersey;
 import com.sun.jersey.api.client.*;
 import com.sun.jersey.api.container.ContainerException;
 import com.sun.jersey.core.header.InBoundHeaders;
+import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.jetty.HttpAppTester;
 import com.thoughtworks.inproctester.jetty.HttpAppTesterExtensions;
-import com.thoughtworks.inproctester.jetty.InProcRequest;
 import com.thoughtworks.inproctester.jetty.UrlHelper;
 import org.eclipse.jetty.testing.HttpTester;
 
