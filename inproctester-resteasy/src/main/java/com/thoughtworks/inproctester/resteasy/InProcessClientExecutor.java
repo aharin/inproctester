@@ -3,12 +3,12 @@ package com.thoughtworks.inproctester.resteasy;
 import com.thoughtworks.inproctester.core.InProcConnection;
 import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.core.InProcResponse;
-import org.eclipse.jetty.http.HttpException;
 import org.jboss.resteasy.client.ClientExecutor;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 import org.jboss.resteasy.client.core.BaseClientResponse;
 import org.jboss.resteasy.client.core.SelfExpandingBufferredInputStream;
+import org.jboss.resteasy.spi.NotFoundException;
 import org.jboss.resteasy.util.CaseInsensitiveMap;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -76,13 +76,13 @@ public class InProcessClientExecutor implements ClientExecutor {
         return clientResponse;
     }
 
-    private InProcConnection routeToTesterApplication(URI requestUri) throws HttpException {
+    private InProcConnection routeToTesterApplication(URI requestUri) {
         for (TesterRoute route : testerRoutes) {
             if (route.matches(requestUri)) {
                 return route.getHttpAppTester();
             }
         }
-        throw new HttpException(404, "Unknown Route: " + requestUri);
+        throw new NotFoundException("Unknown Route: " + requestUri);
     }
 
 
