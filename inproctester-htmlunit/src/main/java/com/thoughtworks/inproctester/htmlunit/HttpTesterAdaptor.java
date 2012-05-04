@@ -18,26 +18,24 @@ import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponseData;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import com.thoughtworks.inproctester.core.InProcRequest;
-import org.eclipse.jetty.testing.HttpTester;
+import com.thoughtworks.inproctester.core.InProcResponse;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class HttpTesterAdaptor {
-    static WebResponseData adaptResponse(HttpTester httpTester) throws IOException {
+    static WebResponseData adaptResponse(InProcResponse inProcResponse) throws IOException {
         final List<NameValuePair> headers = new ArrayList<NameValuePair>();
-        Enumeration headerNames = httpTester.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement().toString();
-            Enumeration headerValues = httpTester.getHeaderValues(headerName);
-            while (headerValues.hasMoreElements()) {
-                String headerValue = headerValues.nextElement().toString();
-                headers.add(new NameValuePair(headerName, headerValue));
-            }
+        Set<String> headerNames = inProcResponse.getHeaderNames();
+        for (String headerName : headerNames) {
+            String headerValue = inProcResponse.getHeader(headerName);
+            headers.add(new NameValuePair(headerName, headerValue));
         }
-        String content = httpTester.getContent();
+        String content = inProcResponse.getContent();
         if (content == null) content = "";
-        return new WebResponseData(content.getBytes(httpTester.getCharacterEncoding()), httpTester.getStatus(), httpTester.getReason(), headers);
+        return new WebResponseData(content.getBytes(inProcResponse.getCharacterEncoding()), inProcResponse.getStatus(), inProcResponse.getReason(), headers);
     }
 
     static InProcRequest adaptRequest(WebRequest request) {

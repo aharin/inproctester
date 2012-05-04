@@ -1,10 +1,9 @@
 package com.thoughtworks.inproctester.resteasy;
 
+import com.thoughtworks.inproctester.core.InProcConnection;
 import com.thoughtworks.inproctester.core.InProcRequest;
-import com.thoughtworks.inproctester.jetty.HttpAppTester;
-import com.thoughtworks.inproctester.jetty.HttpAppTesterExtensions;
+import com.thoughtworks.inproctester.core.InProcResponse;
 import org.eclipse.jetty.http.HttpException;
-import org.eclipse.jetty.testing.HttpTester;
 import org.jboss.resteasy.client.ClientExecutor;
 import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
@@ -20,8 +19,8 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
 
 public class InProcessClientExecutor implements ClientExecutor {
 
@@ -30,11 +29,11 @@ public class InProcessClientExecutor implements ClientExecutor {
     public InProcessClientExecutor() {
     }
 
-    public InProcessClientExecutor(final HttpAppTester httpAppTester) {
+    public InProcessClientExecutor(InProcConnection httpAppTester) {
         addTesterRoute(new AnyRouteMatcher(), httpAppTester);
     }
 
-    public InProcessClientExecutor addTesterRoute(RouteMatcher routeMatcher, HttpAppTester tester) {
+    public InProcessClientExecutor addTesterRoute(RouteMatcher routeMatcher, InProcConnection tester) {
         testerRoutes.add(new TesterRoute(routeMatcher, tester));
         return this;
     }
@@ -51,7 +50,7 @@ public class InProcessClientExecutor implements ClientExecutor {
 
         final InProcRequest testerRequest = new RestEasyClientInProcRequest(clientRequest);
 
-        final HttpTester testerResponse = HttpAppTesterExtensions.processRequest(routeToTesterApplication(testerRequest.getUri()), testerRequest);
+        final InProcResponse testerResponse = routeToTesterApplication(testerRequest.getUri()).getResponses(testerRequest);
 
         BaseClientResponse<?> clientResponse = new BaseClientResponse(new BaseClientResponse.BaseClientResponseStreamFactory() {
             InputStream stream;
@@ -77,7 +76,7 @@ public class InProcessClientExecutor implements ClientExecutor {
         return clientResponse;
     }
 
-    private HttpAppTester routeToTesterApplication(URI requestUri) throws HttpException {
+    private InProcConnection routeToTesterApplication(URI requestUri) throws HttpException {
         for (TesterRoute route : testerRoutes) {
             if (route.matches(requestUri)) {
                 return route.getHttpAppTester();
@@ -87,23 +86,19 @@ public class InProcessClientExecutor implements ClientExecutor {
     }
 
 
-    private byte[] getContent(HttpTester cResponse) throws UnsupportedEncodingException {
+    private byte[] getContent(InProcResponse cResponse) throws UnsupportedEncodingException {
         String contentString = cResponse.getContent();
         if (contentString == null) contentString = "";
         return contentString.getBytes(cResponse.getCharacterEncoding());
     }
 
 
-    private MultivaluedMap<String, String> extractHeaders(HttpTester httpTester) {
+    private MultivaluedMap<String, String> extractHeaders(InProcResponse inProcResponse) {
         final CaseInsensitiveMap<String> headers = new CaseInsensitiveMap<String>();
-        Enumeration headerNames = httpTester.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement().toString();
-            Enumeration headerValues = httpTester.getHeaderValues(headerName);
-            while (headerValues.hasMoreElements()) {
-                String headerValue = headerValues.nextElement().toString();
-                headers.add(headerName, headerValue);
-            }
+        Set<String> headerNames = inProcResponse.getHeaderNames();
+        for (String headerName : headerNames) {
+            String headerValue = inProcResponse.getHeader(headerName);
+            headers.add(headerName, headerValue);
         }
         return headers;
     }

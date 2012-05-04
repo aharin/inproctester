@@ -15,7 +15,7 @@
 package com.thoughtworks.inproctester.htmlunit;
 
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
-import com.thoughtworks.inproctester.jetty.UrlHelper;
+import com.thoughtworks.inproctester.core.UrlHelper;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.List;

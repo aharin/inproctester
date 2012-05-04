@@ -16,6 +16,8 @@ package com.thoughtworks.inproctester.jetty;
 
 import com.thoughtworks.inproctester.core.InProcConnection;
 import com.thoughtworks.inproctester.core.InProcRequest;
+import com.thoughtworks.inproctester.core.InProcResponse;
+import com.thoughtworks.inproctester.core.UrlHelper;
 import org.eclipse.jetty.io.ByteArrayBuffer;
 import org.eclipse.jetty.server.LocalConnector;
 import org.eclipse.jetty.testing.HttpTester;
@@ -44,7 +46,7 @@ public class LocalConnection implements InProcConnection {
     }
 
     @Override
-    public String getResponses(InProcRequest request) {
+    public InProcResponse getResponses(InProcRequest request) {
         HttpTester httpTester = new HttpTester();
         httpTester.setMethod(request.getHttpMethod());
         httpTester.setURI(UrlHelper.getRequestPath(request.getUri()));
@@ -53,13 +55,18 @@ public class LocalConnection implements InProcConnection {
         }
 
         if ("POST".equals(request.getHttpMethod())) {
-            httpTester.setContent(request.getFormData());
+            httpTester.setContent(request.getContent());
         }
 
         try {
-            return getResponses(httpTester.generate());
+            String rawResponse = getResponses(httpTester.generate());
+            HttpTester testerResponse = new HttpTester();
+            testerResponse.parse(rawResponse);
+            return new JettyInProcResponse(testerResponse);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+
     }
 }

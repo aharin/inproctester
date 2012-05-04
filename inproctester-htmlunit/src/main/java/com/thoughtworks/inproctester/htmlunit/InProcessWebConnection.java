@@ -14,19 +14,24 @@
  */
 package com.thoughtworks.inproctester.htmlunit;
 
-import com.gargoylesoftware.htmlunit.*;
+import com.gargoylesoftware.htmlunit.CookieManager;
+import com.gargoylesoftware.htmlunit.WebConnection;
+import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.util.Cookie;
 import com.thoughtworks.inproctester.core.InProcConnection;
 import com.thoughtworks.inproctester.core.InProcRequest;
+import com.thoughtworks.inproctester.core.InProcResponse;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jetty.testing.HttpTester;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import static com.thoughtworks.inproctester.htmlunit.HttpTesterAdaptor.adaptRequest;
 import static com.thoughtworks.inproctester.htmlunit.HttpTesterAdaptor.adaptResponse;
-import static com.thoughtworks.inproctester.jetty.HttpAppTesterExtensions.processRequest;
 
 public class InProcessWebConnection implements WebConnection {
     private CookieManager cookieManager;
@@ -43,23 +48,19 @@ public class InProcessWebConnection implements WebConnection {
         return new WebResponse(adaptResponse(processTesterRequest(adaptRequest(webRequest))), webRequest, 0);
     }
 
-    private HttpTester processTesterRequest(InProcRequest inProcRequest) throws IOException {
+    private InProcResponse processTesterRequest(InProcRequest inProcRequest) throws IOException {
         addCookiesToRequest(inProcRequest);
-        HttpTester testerResponse = processRequest(inProcConnection, inProcRequest);
-        storeCookiesFromResponse(inProcRequest, testerResponse);
-        return testerResponse;
+        InProcResponse inProcResponse = inProcConnection.getResponses(inProcRequest);
+        storeCookiesFromResponse(inProcRequest, inProcResponse);
+        return inProcResponse;
     }
 
-    private void storeCookiesFromResponse(InProcRequest testerRequest, HttpTester testerResponse) {
+    private void storeCookiesFromResponse(InProcRequest testerRequest, InProcResponse inProcResponse) {
         String requestHostName = testerRequest.getHeader("Host").split(":", 1)[0];
-        Enumeration headerNames = testerResponse.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement().toString();
+        Set<String> headerNames = inProcResponse.getHeaderNames();
+        for (String headerName : headerNames) {
             if ("Set-Cookie".equalsIgnoreCase(headerName)) {
-                Enumeration headerValues = testerResponse.getHeaderValues(headerName);
-                while (headerValues.hasMoreElements()) {
-                    storeCookie(requestHostName, headerValues.nextElement().toString());
-                }
+                storeCookie(requestHostName, inProcResponse.getHeader(headerName));
             }
         }
     }

@@ -16,6 +16,7 @@ package com.thoughtworks.inproctester.jetty;
 
 import com.thoughtworks.inproctester.core.InProcConnection;
 import com.thoughtworks.inproctester.core.InProcRequest;
+import com.thoughtworks.inproctester.core.InProcResponse;
 import org.eclipse.jetty.server.LocalConnector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ErrorHandler;
@@ -129,7 +130,7 @@ public class HttpAppTester implements InProcConnection {
     }
 
     @Override
-    public String getResponses(InProcRequest inProcRequest) {
-      return localConnection.getResponses(inProcRequest);
+    public InProcResponse getResponses(InProcRequest inProcRequest) {
+        return localConnection.getResponses(inProcRequest);
     }
 }

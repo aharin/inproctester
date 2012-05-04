@@ -1,7 +1,7 @@
 package com.thoughtworks.inproctester.resteasy;
 
 import com.thoughtworks.inproctester.core.InProcRequest;
-import com.thoughtworks.inproctester.jetty.UrlHelper;
+import com.thoughtworks.inproctester.core.UrlHelper;
 import org.jboss.resteasy.client.ClientRequest;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -44,7 +44,7 @@ public class RestEasyClientInProcRequest implements InProcRequest {
     }
 
     @Override
-    public String getFormData() {
+    public String getContent() {
         try {
             return new String(writeRequestEntity(clientRequest), "UTF-8");
         } catch (UnsupportedEncodingException e) {

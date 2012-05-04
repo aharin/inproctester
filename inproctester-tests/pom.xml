@@ -29,6 +29,12 @@
             <version>1.0.13-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
+         <dependency>
+            <groupId>com.thoughtworks.inproctester</groupId>
+            <artifactId>inproctester-jetty</artifactId>
+            <version>1.0.13-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 

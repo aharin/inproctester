@@ -18,15 +18,17 @@ import com.sun.jersey.api.client.*;
 import com.sun.jersey.api.container.ContainerException;
 import com.sun.jersey.core.header.InBoundHeaders;
 import com.thoughtworks.inproctester.core.InProcRequest;
+import com.thoughtworks.inproctester.core.InProcResponse;
+import com.thoughtworks.inproctester.core.UrlHelper;
 import com.thoughtworks.inproctester.jetty.HttpAppTester;
-import com.thoughtworks.inproctester.jetty.HttpAppTesterExtensions;
-import com.thoughtworks.inproctester.jetty.UrlHelper;
-import org.eclipse.jetty.testing.HttpTester;
 
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.*;
 import java.net.URI;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class InPocessClientHandler extends TerminatingClientHandler {
     private final HttpAppTester w;
@@ -38,12 +40,7 @@ public class InPocessClientHandler extends TerminatingClientHandler {
     public ClientResponse handle(ClientRequest clientRequest) {
         final InProcRequest cRequest = new JerseyClientInprocRequest(clientRequest);
 
-        HttpTester cResponse;
-        try {
-            cResponse = HttpAppTesterExtensions.processRequest(w, cRequest);
-        } catch (IOException e) {
-            throw new ContainerException(e);
-        }
+        InProcResponse cResponse = w.getResponses(cRequest);
 
         ClientResponse clientResponse;
         try {
@@ -59,22 +56,19 @@ public class InPocessClientHandler extends TerminatingClientHandler {
         return clientResponse;
     }
 
-    private byte[] getContent(HttpTester cResponse) throws UnsupportedEncodingException {
+    private byte[] getContent(InProcResponse cResponse) throws UnsupportedEncodingException {
         String contentString = cResponse.getContent();
         if (contentString == null) contentString = "";
         return contentString.getBytes(cResponse.getCharacterEncoding());
     }
 
-    private InBoundHeaders getInBoundHeaders(HttpTester httpTester) {
+    private InBoundHeaders getInBoundHeaders(InProcResponse inProcResponse) {
         InBoundHeaders headers = new InBoundHeaders();
-        Enumeration headerNames = httpTester.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement().toString();
-            Enumeration headerValues = httpTester.getHeaderValues(headerName);
-            while (headerValues.hasMoreElements()) {
-                String headerValue = headerValues.nextElement().toString();
-                headers.add(headerName, headerValue);
-            }
+        Set<String> headerNames = inProcResponse.getHeaderNames();
+
+        for (String headerName : headerNames) {
+            String headerValue = inProcResponse.getHeader(headerName);
+            headers.add(headerName, headerValue);
         }
         return headers;
     }
@@ -101,7 +95,7 @@ public class InPocessClientHandler extends TerminatingClientHandler {
         }
 
         @Override
-        public String getFormData() {
+        public String getContent() {
             byte[] requestEntity = writeRequestEntity(clientRequest);
 
             try {

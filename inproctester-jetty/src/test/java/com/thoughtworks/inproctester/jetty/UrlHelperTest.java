@@ -1,7 +1,6 @@
 package com.thoughtworks.inproctester.jetty;
 
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
+import com.thoughtworks.inproctester.core.UrlHelper;
 import org.junit.Test;
 
 import java.net.URI;

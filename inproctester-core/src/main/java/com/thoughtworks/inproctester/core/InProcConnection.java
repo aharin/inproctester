@@ -15,5 +15,5 @@
 package com.thoughtworks.inproctester.core;
 
 public interface InProcConnection {
-  String getResponses(InProcRequest rawRequests);
+  InProcResponse getResponses(InProcRequest inProcRequest);
 }

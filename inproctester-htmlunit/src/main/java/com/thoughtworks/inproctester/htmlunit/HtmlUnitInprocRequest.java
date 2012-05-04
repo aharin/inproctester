@@ -2,7 +2,7 @@ package com.thoughtworks.inproctester.htmlunit;
 
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.thoughtworks.inproctester.core.InProcRequest;
-import com.thoughtworks.inproctester.jetty.UrlHelper;
+import com.thoughtworks.inproctester.core.UrlHelper;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -36,7 +36,7 @@ class HtmlUnitInProcRequest implements InProcRequest {
     }
 
     @Override
-    public String getFormData() {
+    public String getContent() {
         return new UrlEncodedContent(request.getRequestParameters()).generateFormDataAsString();
     }
 
