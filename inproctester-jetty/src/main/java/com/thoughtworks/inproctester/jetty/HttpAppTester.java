@@ -25,8 +25,10 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 import javax.servlet.Servlet;
+import java.util.EnumSet;
 import java.util.EventListener;
 import java.util.Map;
 
@@ -88,12 +90,12 @@ public class HttpAppTester implements InProcConnection {
     }
 
 
-    public void addFilter(Class<? extends Filter> filterClass, String pathSpec, int dispatches, Map<String, String> initParameters) {
+    public void addFilter(Class<? extends Filter> filterClass, String pathSpec, EnumSet<DispatcherType> dispatches, Map<String, String> initParameters) {
         FilterHolder servletHolder = context.addFilter(filterClass, pathSpec, dispatches);
         servletHolder.setInitParameters(initParameters);
     }
 
-    public void addFilter(Class<? extends Filter> filterClass, String pathSpec, int dispatches) {
+    public void addFilter(Class<? extends Filter> filterClass, String pathSpec, EnumSet<DispatcherType> dispatches) {
         context.addFilter(filterClass, pathSpec, dispatches);
     }
 

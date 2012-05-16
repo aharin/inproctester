@@ -76,6 +76,9 @@ public class InProcessClientExecutor implements ClientExecutor {
         return clientResponse;
     }
 
+    public void close() throws Exception {
+    }
+
     private InProcConnection routeToTesterApplication(URI requestUri) {
         for (TesterRoute route : testerRoutes) {
             if (route.matches(requestUri)) {
