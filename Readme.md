@@ -1,6 +1,16 @@
 # In-process web application tester
 
-HtmlUnit and WebDriver extensions to enable testing of a web application in-processs
+Inproctester provides HtmlUnit and WebDriver extensions to enable testing of a web application in-processs.
+It simulates a j2ee servlet container to enable a standard j2ee web application to run within a test process.
+Inproctester uses jetty behind the scenes, however it allows to dispatch requests to the web application under test directly, bypassing any socket and http layer.
+
+# Note on jersey
+Inproctester provides a jersey-client implementation that allows requests to be dispatched directly to a jersey-based web service packaged as a j2ee web application.
+However jersey could also be used independently from a servlet container. E.g. it could be deployed with simpleweb [http://www.simpleframework.org].
+Jersey-based web services are testable in memory out of the box, using jersey-test framework without the need to simulate a j2ee web environment [http://jersey.java.net/nonav/documentation/latest/test-framework.html].
+
+The standard jersey-test framework does not however provide a WebDriver interface that would allow to test html if jersey is used for html generation.
+The sibling jerseytester project [https://github.com/aharin/jerseytester] provides such WebDriver extensions for jersey-test framework.
 
 ## Contributors
 
