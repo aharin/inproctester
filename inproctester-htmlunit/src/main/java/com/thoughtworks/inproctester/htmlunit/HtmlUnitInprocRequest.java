@@ -37,7 +37,12 @@ class HtmlUnitInProcRequest implements InProcRequest {
 
     @Override
     public String getContent() {
-        return new UrlEncodedContent(request.getRequestParameters()).generateFormDataAsString();
+        if (request.getRequestParameters().size() > 0) {
+            return new UrlEncodedContent(request.getRequestParameters()).generateFormDataAsString();
+        } else if(request.getRequestBody().length() > 0) {
+            return request.getRequestBody();
+        }
+        return "";
     }
 
     @Override
