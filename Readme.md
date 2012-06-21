@@ -8,12 +8,12 @@ HtmlUnit and WebDriver extensions to enable testing of a web application in-proc
 
 ## Binaries
 
-The latest release of inproctester is 1.0.12, released on 28-Feb-2012. The compiled binaries are available via central maven repository.
+The latest release of inproctester is 1.0.13, released on 21-Jun-2012. The compiled binaries are available via central maven repository.
 
     <dependency>
         <groupId>com.thoughtworks.inproctester</groupId>
         <artifactId>inproctester-webdriver</artifactId>
-        <version>1.0.12</version>
+        <version>1.0.13</version>
     </dependency>
 
 ## Licence
