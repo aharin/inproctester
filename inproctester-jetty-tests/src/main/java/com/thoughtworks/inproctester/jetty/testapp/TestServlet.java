@@ -27,7 +27,7 @@ public class TestServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().append(request.getReader().toString());
+        response.getWriter().append(request.getReader().readLine());
     }
 
     @Override protected void doPost(

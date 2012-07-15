@@ -60,10 +60,8 @@ public class InProcessHtmlUnitDriverTest {
         httpAppTester.stop();
     }
 
-
     @Test
     public void shouldSupportGetAndPostRequests() {
-
         WebDriver htmlUnitDriver = new InProcessHtmlUnitDriver(httpAppTester);
 
         htmlUnitDriver.get("http://localhost/contacts/add");

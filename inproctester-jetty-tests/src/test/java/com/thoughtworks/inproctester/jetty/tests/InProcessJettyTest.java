@@ -45,6 +45,20 @@ public class InProcessJettyTest {
         assertThat(response.getContent(), is("POST body"));
     }
 
+    @Test
+    public void shouldAcceptBodyForPutRequest() throws Exception {
+        HashMap<String, String> headers = new HashMap<String, String>();
+        headers.put("Host", "localhost");
+        headers.put("Content-Type", "text/plain");
+
+        URI uri = new URI("http://localhost/");
+        InProcRequest request = new TestRequest("PUT", uri, "PUT body", headers);
+
+        InProcResponse response = httpAppTester.getResponses(request);
+
+        assertThat(response.getContent(), is("PUT body"));
+    }
+
     private static class TestRequest implements InProcRequest {
         private final String httpMethod;
         private final URI uri;
