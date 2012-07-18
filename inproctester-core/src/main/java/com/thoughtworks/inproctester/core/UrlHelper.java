@@ -32,9 +32,9 @@ public class UrlHelper {
     }
 
     public static String getRequestPath(URI uri) {
-        String path = uri.getPath();
-        String query = uri.getQuery();
-        String fragment = uri.getFragment();
+        String path = uri.getRawPath();
+        String query = uri.getRawQuery();
+        String fragment = uri.getRawFragment();
 
         StringBuilder sb = new StringBuilder(path);
         if (query != null && query.length() > 0) {
