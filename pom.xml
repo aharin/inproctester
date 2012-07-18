@@ -36,6 +36,7 @@
     <modules>
         <module>inproctester-core</module>
         <module>inproctester-jetty</module>
+        <module>inproctester-jetty-tests</module>
         <module>inproctester-htmlunit</module>
         <module>inproctester-webdriver</module>
         <module>inproctester-tests</module>

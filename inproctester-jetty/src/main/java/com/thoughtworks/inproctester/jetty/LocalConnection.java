@@ -50,12 +50,10 @@ public class LocalConnection implements InProcConnection {
         HttpTester httpTester = new HttpTester();
         httpTester.setMethod(request.getHttpMethod());
         httpTester.setURI(UrlHelper.getRequestPath(request.getUri()));
+        httpTester.setContent(request.getContent());
+
         for (String headerName : request.getHeaderNames()) {
             httpTester.addHeader(headerName, request.getHeader(headerName));
-        }
-
-        if ("POST".equals(request.getHttpMethod())) {
-            httpTester.setContent(request.getContent());
         }
 
         try {
@@ -66,7 +64,5 @@ public class LocalConnection implements InProcConnection {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 }
