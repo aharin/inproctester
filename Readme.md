@@ -18,12 +18,12 @@ The sibling jerseytester project [https://github.com/aharin/jerseytester] provid
 
 ## Binaries
 
-The latest release of inproctester is 1.0.13, released on 21-Jun-2012. The compiled binaries are available via central maven repository.
+The latest release of inproctester is 1.0.14, released on 29-Aug-2012. The compiled binaries are available via central maven repository.
 
     <dependency>
         <groupId>com.thoughtworks.inproctester</groupId>
         <artifactId>inproctester-webdriver</artifactId>
-        <version>1.0.13</version>
+        <version>1.0.14</version>
     </dependency>
 
 ## Licence
