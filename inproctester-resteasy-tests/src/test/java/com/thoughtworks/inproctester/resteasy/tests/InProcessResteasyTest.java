@@ -52,6 +52,19 @@ public class InProcessResteasyTest {
 //        Assert.assertEquals(testResource, testResourceFromServer);
     }
 
+    @Test
+    public void shouldGetResource() throws Exception {
+        ClientRequest request = new ClientRequest("http://localhost/", new InProcessClientExecutor(httpAppTester));
+        JsonNode testResource = objectMapper.readValue("{\"name\":\"test\"}", JsonNode.class);
+        ClientResponse<JsonNode> response = request.body(MediaType.APPLICATION_JSON, testResource).post(JsonNode.class);
+
+        request = new ClientRequest(response.getLocation().getHref(), new InProcessClientExecutor(httpAppTester));
+        response = request.accept(MediaType.APPLICATION_JSON).get(JsonNode.class);
+
+        Assert.assertEquals(200, response.getStatus());
+        JsonNode entity = response.getEntity();
+        Assert.assertEquals(testResource, entity);
+    }
 
 }
 
