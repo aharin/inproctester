@@ -25,7 +25,9 @@ public class RestEasyClientInProcRequest implements InProcRequest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        headers.put("Content-type", clientRequest.getBodyContentType().toString());
+        if (clientRequest.getBodyContentType() != null) {
+            headers.put("Content-type", clientRequest.getBodyContentType().toString());
+        }
         headers.putAll(asMap(clientRequest.getHeaders()));
     }
 
