@@ -22,7 +22,7 @@ import com.gargoylesoftware.htmlunit.util.Cookie;
 import com.thoughtworks.inproctester.core.InProcConnection;
 import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.core.InProcResponse;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
