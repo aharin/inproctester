@@ -6,7 +6,6 @@
         <version>1.0.16-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.thoughtworks.inproctester</groupId>
     <artifactId>inproctester-resteasy-tests</artifactId>
     <name>In Process Tester :: RestEasy Tests</name>
     <packaging>war</packaging>
