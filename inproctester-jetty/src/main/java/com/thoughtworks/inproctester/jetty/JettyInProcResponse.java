@@ -1,33 +1,36 @@
 package com.thoughtworks.inproctester.jetty;
 
 import com.thoughtworks.inproctester.core.InProcResponse;
-import org.eclipse.jetty.testing.HttpTester;
+import org.eclipse.jetty.http.HttpHeader;
+import org.eclipse.jetty.http.HttpTester;
+import org.eclipse.jetty.http.MimeTypes;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
 public class JettyInProcResponse implements InProcResponse {
-    private HttpTester httpTester;
+    private HttpTester.Response testerResponse;
 
-    public JettyInProcResponse(HttpTester httpTester) {
-        this.httpTester = httpTester;
+    public JettyInProcResponse(HttpTester.Response testerResponse) {
+        this.testerResponse = testerResponse;
     }
 
     @Override
     public int getStatus() {
-        return httpTester.getStatus();
+        return testerResponse.getStatus();
     }
 
     @Override
     public String getContent() {
-        return httpTester.getContent();
+        return testerResponse.getContent();
     }
 
     @Override
     public Set<String> getHeaderNames() {
-        Set<String> headerNames = new HashSet<String>();
-        Enumeration enumeration = httpTester.getHeaderNames();
+        Set<String> headerNames = new HashSet<>();
+        Enumeration enumeration = testerResponse.getFieldNames();
         while (enumeration.hasMoreElements()) {
             headerNames.add(enumeration.nextElement().toString());
         }
@@ -36,16 +39,20 @@ public class JettyInProcResponse implements InProcResponse {
 
     @Override
     public String getHeader(String headerName) {
-        return httpTester.getHeader(headerName);
+        return testerResponse.get(headerName);
     }
 
     @Override
     public String getCharacterEncoding() {
-        return httpTester.getCharacterEncoding();
+        String encoding = MimeTypes.getCharsetFromContentType(testerResponse.get(HttpHeader.CONTENT_TYPE));
+        if (encoding == null) {
+            encoding = StandardCharsets.UTF_8.name();
+        }
+        return encoding;
     }
 
     @Override
     public String getReason() {
-        return httpTester.getReason();
+        return testerResponse.getReason();
     }
 }

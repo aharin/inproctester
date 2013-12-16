@@ -17,6 +17,7 @@ package com.thoughtworks.inproctester.jetty;
 import com.thoughtworks.inproctester.core.InProcConnection;
 import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.core.InProcResponse;
+import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.LocalConnector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ErrorHandler;
@@ -38,19 +39,37 @@ public class HttpAppTester implements InProcConnection {
     private LocalConnection localConnection;
     private ServletContextHandler context;
 
-    public HttpAppTester(String webApp, String contextPath) {
-        server = new Server();
-        LocalConnector connector = new LocalConnector();
-        context = createWebAppContext(webApp, contextPath);
+    public HttpAppTester(String contextPath) {
+        this(createServletContextHandler(contextPath));
+    }
 
-        server.addBean(new ErrorHandler());
-        server.setSendServerVersion(false);
+    public HttpAppTester(String webApp, String contextPath) {
+        this(createWebAppContext(webApp, contextPath));
+    }
+
+    private HttpAppTester(ServletContextHandler context) {
+        server = new Server();
+        ErrorHandler errorHandler = new ErrorHandler();
+        errorHandler.setServer(server);
+        server.addBean(errorHandler);
+
+        LocalConnector connector = createLocalConnector(server);
         server.addConnector(connector);
+
+        this.context = context;
         server.setHandler(context);
+
         localConnection = new LocalConnection(connector);
     }
 
-    private WebAppContext createWebAppContext(String webApp, String contextPath) {
+    private LocalConnector createLocalConnector(Server server) {
+        HttpConnectionFactory httpConnectionFactory = new HttpConnectionFactory();
+        httpConnectionFactory.getHttpConfiguration().setSendServerVersion(false);
+        return new LocalConnector(server, null, null, null, -1, httpConnectionFactory);
+    }
+
+
+    private static ServletContextHandler createWebAppContext(String webApp, String contextPath) {
         WebAppContext context = new WebAppContext();
         context.setWar(webApp);
         context.setContextPath(contextPath);
@@ -62,20 +81,7 @@ public class HttpAppTester implements InProcConnection {
         return context;
     }
 
-    public HttpAppTester(String contextPath) {
-        server = new Server();
-        LocalConnector connector = new LocalConnector();
-        context = createServletContextHandler(contextPath);
-
-
-        server.addBean(new ErrorHandler());
-        server.setSendServerVersion(false);
-        server.addConnector(connector);
-        server.setHandler(context);
-        localConnection = new LocalConnection(connector);
-    }
-
-    private ServletContextHandler createServletContextHandler(String contextPath) {
+    private static ServletContextHandler createServletContextHandler(String contextPath) {
         return new ServletContextHandler(null, contextPath, ServletContextHandler.SESSIONS);
     }
 

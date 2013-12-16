@@ -21,19 +21,23 @@
 
          <dependency>
             <groupId>org.eclipse.jetty</groupId>
-            <artifactId>test-jetty-servlet</artifactId>
-            <version>8.1.5.v20120716</version>
-             <exclusions>
-                 <exclusion>
-                     <groupId>org.eclipse.jetty.orbit</groupId>
-                     <artifactId>javax.servlet</artifactId>
-                 </exclusion>
-             </exclusions>
+            <artifactId>jetty-webapp</artifactId>
+            <version>9.1.0.v20131115</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-http</artifactId>
+            <version>9.1.0.v20131115</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-io</artifactId>
+            <version>9.1.0.v20131115</version>
         </dependency>
          <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
+            <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

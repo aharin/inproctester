@@ -18,12 +18,12 @@ import com.thoughtworks.inproctester.core.InProcConnection;
 import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.core.InProcResponse;
 import com.thoughtworks.inproctester.core.UrlHelper;
-import org.eclipse.jetty.io.ByteArrayBuffer;
 import org.eclipse.jetty.server.LocalConnector;
-import org.eclipse.jetty.testing.HttpTester;
-import org.eclipse.jetty.util.StringUtil;
+import org.eclipse.jetty.http.HttpTester;
+import org.eclipse.jetty.util.BufferUtil;
 
-import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public class LocalConnection implements InProcConnection {
 
@@ -34,10 +34,9 @@ public class LocalConnection implements InProcConnection {
     }
 
 
-    private String getResponses(String rawRequests) {
+    private ByteBuffer getResponses(ByteBuffer rawRequests) {
         try {
-            ByteArrayBuffer result = connector.getResponses(new ByteArrayBuffer(rawRequests, StringUtil.__UTF8), false);
-            return result == null ? null : result.toString(StringUtil.__UTF8);
+            return connector.getResponses(rawRequests);
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -47,22 +46,19 @@ public class LocalConnection implements InProcConnection {
 
     @Override
     public InProcResponse getResponses(InProcRequest request) {
-        HttpTester httpTester = new HttpTester();
-        httpTester.setMethod(request.getHttpMethod());
-        httpTester.setURI(UrlHelper.getRequestPath(request.getUri()));
-        httpTester.setContent(request.getContent());
+        HttpTester.Request testerRequest = HttpTester.newRequest();
+        testerRequest.setMethod(request.getHttpMethod());
+        testerRequest.setURI(UrlHelper.getRequestPath(request.getUri()));
+        String content = request.getContent();
+        if (content != null) {
+            testerRequest.setContent(content);
+        }
 
         for (String headerName : request.getHeaderNames()) {
-            httpTester.addHeader(headerName, request.getHeader(headerName));
+            testerRequest.add(headerName, request.getHeader(headerName));
         }
-
-        try {
-            String rawResponse = getResponses(httpTester.generate());
-            HttpTester testerResponse = new HttpTester();
-            testerResponse.parse(rawResponse);
-            return new JettyInProcResponse(testerResponse);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        ByteBuffer rawResponse = getResponses(testerRequest.generate());
+        HttpTester.Response testerResponse = HttpTester.parseResponse(rawResponse);
+        return new JettyInProcResponse(testerResponse);
     }
 }
