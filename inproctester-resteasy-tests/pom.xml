@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.thoughtworks.inproctester</groupId>
         <artifactId>inproctester-project</artifactId>
-        <version>1.0.15</version>
+        <version>1.0.16-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.thoughtworks.inproctester</groupId>
@@ -32,13 +32,13 @@
         <dependency>
             <groupId>com.thoughtworks.inproctester</groupId>
             <artifactId>inproctester-resteasy</artifactId>
-            <version>1.0.15</version>
+            <version>1.0.16-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.thoughtworks.inproctester</groupId>
             <artifactId>inproctester-jetty</artifactId>
-            <version>1.0.15</version>
+            <version>1.0.16-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
 
