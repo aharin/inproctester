@@ -33,7 +33,7 @@ public class InProcessJettyTest {
 
     @Test
     public void shouldAcceptBodyForPostRequest() throws Exception {
-        HashMap<String, String> headers = new HashMap<String, String>();
+        HashMap<String, String> headers = new HashMap<>();
         headers.put("Host", "localhost");
         headers.put("Content-Type", "text/plain");
 
@@ -47,7 +47,7 @@ public class InProcessJettyTest {
 
     @Test
     public void shouldAcceptBodyForPutRequest() throws Exception {
-        HashMap<String, String> headers = new HashMap<String, String>();
+        HashMap<String, String> headers = new HashMap<>();
         headers.put("Host", "localhost");
         headers.put("Content-Type", "text/plain");
 

@@ -74,7 +74,7 @@ public class InPocessClientHandler extends TerminatingClientHandler {
     }
 
     class JerseyClientInprocRequest implements InProcRequest {
-        private Map<String, String> headers = new HashMap<String, String>();
+        private Map<String, String> headers = new HashMap<>();
         private ClientRequest clientRequest;
 
         public JerseyClientInprocRequest(ClientRequest clientRequest) {
@@ -121,7 +121,7 @@ public class InPocessClientHandler extends TerminatingClientHandler {
         }
 
         private Map<String, String> asMap(MultivaluedMap<String, Object> headers) {
-            HashMap<String, String> map = new HashMap<String, String>();
+            HashMap<String, String> map = new HashMap<>();
             for (Map.Entry<String, List<Object>> e : headers.entrySet()) {
                 for (Object v : e.getValue()) {
                     map.put(e.getKey(), ClientRequest.getHeaderValue(v));

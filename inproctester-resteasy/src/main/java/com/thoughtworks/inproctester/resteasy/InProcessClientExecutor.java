@@ -24,7 +24,7 @@ import java.util.Set;
 
 public class InProcessClientExecutor implements ClientExecutor {
 
-    private List<TesterRoute> testerRoutes = new ArrayList<TesterRoute>();
+    private List<TesterRoute> testerRoutes = new ArrayList<>();
 
     public InProcessClientExecutor() {
     }
@@ -97,7 +97,7 @@ public class InProcessClientExecutor implements ClientExecutor {
 
 
     private MultivaluedMap<String, String> extractHeaders(InProcResponse inProcResponse) {
-        final CaseInsensitiveMap<String> headers = new CaseInsensitiveMap<String>();
+        final CaseInsensitiveMap<String> headers = new CaseInsensitiveMap<>();
         Set<String> headerNames = inProcResponse.getHeaderNames();
         for (String headerName : headerNames) {
             String headerValue = inProcResponse.getHeader(headerName);
