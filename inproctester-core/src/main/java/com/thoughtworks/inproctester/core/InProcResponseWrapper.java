@@ -26,11 +26,13 @@ public class InProcResponseWrapper implements InProcResponse {
         this.inProcResponse = inProcResponse;
     }
 
-    public byte[] getBytes() {
-        String content = inProcResponse.getContent();
-        if (content == null) content = "";
+    public byte[] getContentBytes() {
+        return inProcResponse.getContentBytes();
+    }
+
+    public String getContent() {
         try {
-            return content.getBytes(getCharacterEncoding());
+            return new String(getContentBytes(), getCharacterEncoding());
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -62,11 +64,6 @@ public class InProcResponseWrapper implements InProcResponse {
     @Override
     public int getStatus() {
         return inProcResponse.getStatus();
-    }
-
-    @Override
-    public String getContent() {
-        return inProcResponse.getContent();
     }
 
     @Override

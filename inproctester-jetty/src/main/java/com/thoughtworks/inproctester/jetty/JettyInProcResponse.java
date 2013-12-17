@@ -20,8 +20,8 @@ public class JettyInProcResponse implements InProcResponse {
     }
 
     @Override
-    public String getContent() {
-        return testerResponse.getContent();
+    public byte[] getContentBytes() {
+        return testerResponse.getContentBytes();
     }
 
     @Override

@@ -29,9 +29,6 @@ public class TestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-        resp.setCharacterEncoding("UTF-8");
-
         Cookie flashMessageCookie = getCookie(req, FLASH_MESSAGE_COOKIE_NAME);
         if (flashMessageCookie != null) {
             req.setAttribute("message", flashMessageCookie.getValue());

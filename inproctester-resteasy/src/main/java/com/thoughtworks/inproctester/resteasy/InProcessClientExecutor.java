@@ -1,6 +1,5 @@
 package com.thoughtworks.inproctester.resteasy;
 
-import com.thoughtworks.inproctester.core.InProcResponseWrapper;
 import com.thoughtworks.inproctester.core.InProcConnection;
 import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.core.InProcResponse;
@@ -49,15 +48,14 @@ public class InProcessClientExecutor implements ClientExecutor {
 
         final InProcRequest testerRequest = new RestEasyClientInProcRequest(clientRequest);
 
-        InProcResponse testerResponse = routeToTesterApplication(testerRequest.getUri()).getResponses(testerRequest);
-        final InProcResponseWrapper responseWrapper = new InProcResponseWrapper(testerResponse);
+        final InProcResponse testerResponse = routeToTesterApplication(testerRequest.getUri()).getResponses(testerRequest);
 
         BaseClientResponse<?> clientResponse = new BaseClientResponse(new BaseClientResponse.BaseClientResponseStreamFactory() {
             InputStream stream;
 
             public InputStream getInputStream() {
                 if (stream == null) {
-                    stream = new SelfExpandingBufferredInputStream(new ByteArrayInputStream(responseWrapper.getBytes()));
+                    stream = new SelfExpandingBufferredInputStream(new ByteArrayInputStream(testerResponse.getContentBytes()));
                 }
                 return stream;
             }
@@ -69,8 +67,8 @@ public class InProcessClientExecutor implements ClientExecutor {
                 }
             }
         }, this);
-        clientResponse.setStatus(responseWrapper.getStatus());
-        clientResponse.setHeaders(extractHeaders(responseWrapper));
+        clientResponse.setStatus(testerResponse.getStatus());
+        clientResponse.setHeaders(extractHeaders(testerResponse));
         clientResponse.setProviderFactory(clientRequest.getProviderFactory());
 
         return clientResponse;

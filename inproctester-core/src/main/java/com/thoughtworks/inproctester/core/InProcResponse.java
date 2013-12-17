@@ -5,7 +5,7 @@ import java.util.Set;
 public interface InProcResponse {
     int getStatus();
 
-    String getContent();
+    byte[] getContentBytes();
 
     Set<String> getHeaderNames();
 

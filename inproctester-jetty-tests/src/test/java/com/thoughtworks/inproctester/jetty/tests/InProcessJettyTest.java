@@ -1,7 +1,7 @@
 package com.thoughtworks.inproctester.jetty.tests;
 
 import com.thoughtworks.inproctester.core.InProcRequest;
-import com.thoughtworks.inproctester.core.InProcResponse;
+import com.thoughtworks.inproctester.core.InProcResponseWrapper;
 import com.thoughtworks.inproctester.jetty.HttpAppTester;
 import com.thoughtworks.inproctester.jetty.testapp.TestServlet;
 import org.junit.AfterClass;
@@ -40,7 +40,7 @@ public class InProcessJettyTest {
         URI uri = new URI("http://localhost/");
         InProcRequest request = new TestRequest("POST", uri, "POST body", headers);
 
-        InProcResponse response = httpAppTester.getResponses(request);
+        InProcResponseWrapper response = new InProcResponseWrapper(httpAppTester.getResponses(request));
 
         assertThat(response.getContent(), is("POST body"));
     }
@@ -54,7 +54,7 @@ public class InProcessJettyTest {
         URI uri = new URI("http://localhost/");
         InProcRequest request = new TestRequest("PUT", uri, "PUT body", headers);
 
-        InProcResponse response = httpAppTester.getResponses(request);
+        InProcResponseWrapper response = new InProcResponseWrapper(httpAppTester.getResponses(request));
 
         assertThat(response.getContent(), is("PUT body"));
     }

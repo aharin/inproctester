@@ -17,7 +17,6 @@ package com.thoughtworks.inproctester.jersey;
 import com.sun.jersey.api.client.*;
 import com.sun.jersey.api.container.ContainerException;
 import com.sun.jersey.core.header.InBoundHeaders;
-import com.thoughtworks.inproctester.core.InProcResponseWrapper;
 import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.core.InProcResponse;
 import com.thoughtworks.inproctester.core.UrlHelper;
@@ -43,11 +42,10 @@ public class InPocessClientHandler extends TerminatingClientHandler {
 
         InProcResponse cResponse = w.getResponses(cRequest);
 
-        InProcResponseWrapper responseWrapper = new InProcResponseWrapper(cResponse);
         return new ClientResponse(
-                responseWrapper.getStatus(),
-                getInBoundHeaders(responseWrapper),
-                new ByteArrayInputStream(responseWrapper.getBytes()),
+                cResponse.getStatus(),
+                getInBoundHeaders(cResponse),
+                new ByteArrayInputStream(cResponse.getContentBytes()),
                 getMessageBodyWorkers());
     }
 
