@@ -12,7 +12,7 @@ import java.util.Set;
 
 class HtmlUnitInProcRequest implements InProcRequest {
     private WebRequest request;
-    private Map<String, String> headers = new HashMap<String, String>();
+    private Map<String, String> headers = new HashMap<>();
 
     public HtmlUnitInProcRequest(WebRequest request) {
         this.request = request;
