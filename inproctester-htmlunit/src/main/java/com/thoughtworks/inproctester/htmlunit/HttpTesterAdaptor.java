@@ -17,7 +17,7 @@ package com.thoughtworks.inproctester.htmlunit;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponseData;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
-import com.thoughtworks.inproctester.core.ContentHelper;
+import com.thoughtworks.inproctester.core.InProcResponseWrapper;
 import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.core.InProcResponse;
 
@@ -28,13 +28,14 @@ import java.util.Set;
 
 public class HttpTesterAdaptor {
     static WebResponseData adaptResponse(InProcResponse inProcResponse) throws IOException {
+        InProcResponseWrapper responseWrapper = new InProcResponseWrapper(inProcResponse);
         final List<NameValuePair> headers = new ArrayList<>();
-        Set<String> headerNames = inProcResponse.getHeaderNames();
+        Set<String> headerNames = responseWrapper.getHeaderNames();
         for (String headerName : headerNames) {
-            String headerValue = inProcResponse.getHeader(headerName);
+            String headerValue = responseWrapper.getHeader(headerName);
             headers.add(new NameValuePair(headerName, headerValue));
         }
-        return new WebResponseData(ContentHelper.getBytes(inProcResponse), inProcResponse.getStatus(), inProcResponse.getReason(), headers);
+        return new WebResponseData(responseWrapper.getBytes(), responseWrapper.getStatus(), responseWrapper.getReason(), headers);
     }
 
     static InProcRequest adaptRequest(WebRequest request) {

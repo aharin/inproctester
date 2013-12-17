@@ -16,19 +16,27 @@ package com.thoughtworks.inproctester.core;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
 
-public class ContentHelper {
-    public static byte[] getBytes(InProcResponse inProcResponse) {
+public class InProcResponseWrapper implements InProcResponse {
+
+    private InProcResponse inProcResponse;
+
+    public InProcResponseWrapper(InProcResponse inProcResponse) {
+        this.inProcResponse = inProcResponse;
+    }
+
+    public byte[] getBytes() {
         String content = inProcResponse.getContent();
         if (content == null) content = "";
         try {
-            return content.getBytes(getCharacterEncoding(inProcResponse));
+            return content.getBytes(getCharacterEncoding());
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static String getCharacterEncoding(InProcResponse inProcResponse) {
+    public String getCharacterEncoding() {
         String charset = "";
 
         String contentType = inProcResponse.getHeader("Content-Type");
@@ -49,5 +57,30 @@ public class ContentHelper {
         }
 
         return charset;
+    }
+
+    @Override
+    public int getStatus() {
+        return inProcResponse.getStatus();
+    }
+
+    @Override
+    public String getContent() {
+        return inProcResponse.getContent();
+    }
+
+    @Override
+    public Set<String> getHeaderNames() {
+        return inProcResponse.getHeaderNames();
+    }
+
+    @Override
+    public String getHeader(String headerName) {
+        return inProcResponse.getHeader(headerName);
+    }
+
+    @Override
+    public String getReason() {
+        return inProcResponse.getReason();
     }
 }
