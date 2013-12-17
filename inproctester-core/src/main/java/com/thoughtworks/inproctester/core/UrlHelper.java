@@ -22,15 +22,6 @@ import java.net.URLEncoder;
 
 public class UrlHelper {
 
-    public static String getRequestPath(URL absoluteUrl) {
-        try {
-            URI uri = absoluteUrl.toURI();
-            return getRequestPath(uri);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static String getRequestPath(URI uri) {
         String path = uri.getRawPath();
         String query = uri.getRawQuery();
