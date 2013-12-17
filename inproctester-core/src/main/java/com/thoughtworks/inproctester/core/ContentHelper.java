@@ -45,7 +45,7 @@ public class ContentHelper {
         }
 
         if ("".equals(charset)) {
-            charset = StandardCharsets.UTF_8.name();
+            charset = StandardCharsets.ISO_8859_1.name();
         }
 
         return charset;
