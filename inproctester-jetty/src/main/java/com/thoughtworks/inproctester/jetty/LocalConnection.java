@@ -14,18 +14,15 @@
  */
 package com.thoughtworks.inproctester.jetty;
 
-import com.thoughtworks.inproctester.core.InProcConnection;
 import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.core.InProcResponse;
 import com.thoughtworks.inproctester.core.UrlHelper;
 import org.eclipse.jetty.server.LocalConnector;
 import org.eclipse.jetty.http.HttpTester;
-import org.eclipse.jetty.util.BufferUtil;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 
-public class LocalConnection implements InProcConnection {
+public class LocalConnection  {
 
     private LocalConnector connector;
 
@@ -44,7 +41,6 @@ public class LocalConnection implements InProcConnection {
         }
     }
 
-    @Override
     public InProcResponse getResponses(InProcRequest request) {
         HttpTester.Request testerRequest = HttpTester.newRequest();
         testerRequest.setMethod(request.getHttpMethod());
