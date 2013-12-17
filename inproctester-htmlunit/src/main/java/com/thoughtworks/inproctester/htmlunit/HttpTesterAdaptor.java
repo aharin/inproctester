@@ -17,6 +17,7 @@ package com.thoughtworks.inproctester.htmlunit;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponseData;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
+import com.thoughtworks.inproctester.core.ContentHelper;
 import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.core.InProcResponse;
 
@@ -33,9 +34,7 @@ public class HttpTesterAdaptor {
             String headerValue = inProcResponse.getHeader(headerName);
             headers.add(new NameValuePair(headerName, headerValue));
         }
-        String content = inProcResponse.getContent();
-        if (content == null) content = "";
-        return new WebResponseData(content.getBytes(inProcResponse.getCharacterEncoding()), inProcResponse.getStatus(), inProcResponse.getReason(), headers);
+        return new WebResponseData(ContentHelper.getBytes(inProcResponse), inProcResponse.getStatus(), inProcResponse.getReason(), headers);
     }
 
     static InProcRequest adaptRequest(WebRequest request) {

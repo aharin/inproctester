@@ -17,6 +17,7 @@ package com.thoughtworks.inproctester.jersey;
 import com.sun.jersey.api.client.*;
 import com.sun.jersey.api.container.ContainerException;
 import com.sun.jersey.core.header.InBoundHeaders;
+import com.thoughtworks.inproctester.core.ContentHelper;
 import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.core.InProcResponse;
 import com.thoughtworks.inproctester.core.UrlHelper;
@@ -42,24 +43,11 @@ public class InPocessClientHandler extends TerminatingClientHandler {
 
         InProcResponse cResponse = w.getResponses(cRequest);
 
-        ClientResponse clientResponse;
-        try {
-            clientResponse = new ClientResponse(
-                    cResponse.getStatus(),
-                    getInBoundHeaders(cResponse),
-                    new ByteArrayInputStream(getContent(cResponse)),
-                    getMessageBodyWorkers());
-        } catch (UnsupportedEncodingException e) {
-            throw new ContainerException(e);
-        }
-
-        return clientResponse;
-    }
-
-    private byte[] getContent(InProcResponse cResponse) throws UnsupportedEncodingException {
-        String contentString = cResponse.getContent();
-        if (contentString == null) contentString = "";
-        return contentString.getBytes(cResponse.getCharacterEncoding());
+        return new ClientResponse(
+                cResponse.getStatus(),
+                getInBoundHeaders(cResponse),
+                new ByteArrayInputStream(ContentHelper.getBytes(cResponse)),
+                getMessageBodyWorkers());
     }
 
     private InBoundHeaders getInBoundHeaders(InProcResponse inProcResponse) {

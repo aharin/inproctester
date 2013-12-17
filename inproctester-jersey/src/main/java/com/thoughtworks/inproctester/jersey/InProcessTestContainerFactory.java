@@ -146,9 +146,7 @@ public class InProcessTestContainerFactory implements TestContainerFactory {
                 for (Class<? extends EventListener> eventListener : eventListeners) {
                     try {
                         httpServer.addEventListener(eventListener.newInstance());
-                    } catch (InstantiationException e) {
-                        throw new RuntimeException(e);
-                    } catch (IllegalAccessException e) {
+                    } catch (InstantiationException | IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }
                 }

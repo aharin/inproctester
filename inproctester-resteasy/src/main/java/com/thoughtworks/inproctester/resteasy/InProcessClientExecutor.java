@@ -1,5 +1,6 @@
 package com.thoughtworks.inproctester.resteasy;
 
+import com.thoughtworks.inproctester.core.ContentHelper;
 import com.thoughtworks.inproctester.core.InProcConnection;
 import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.core.InProcResponse;
@@ -14,9 +15,7 @@ import org.jboss.resteasy.util.CaseInsensitiveMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,9 +54,9 @@ public class InProcessClientExecutor implements ClientExecutor {
         BaseClientResponse<?> clientResponse = new BaseClientResponse(new BaseClientResponse.BaseClientResponseStreamFactory() {
             InputStream stream;
 
-            public InputStream getInputStream() throws IOException {
+            public InputStream getInputStream() {
                 if (stream == null) {
-                    stream = new SelfExpandingBufferredInputStream(new ByteArrayInputStream(getContent(testerResponse)));
+                    stream = new SelfExpandingBufferredInputStream(new ByteArrayInputStream(ContentHelper.getBytes(testerResponse)));
                 }
                 return stream;
             }
@@ -87,14 +86,6 @@ public class InProcessClientExecutor implements ClientExecutor {
         }
         throw new NotFoundException("Unknown Route: " + requestUri);
     }
-
-
-    private byte[] getContent(InProcResponse cResponse) throws UnsupportedEncodingException {
-        String contentString = cResponse.getContent();
-        if (contentString == null) contentString = "";
-        return contentString.getBytes(cResponse.getCharacterEncoding());
-    }
-
 
     private MultivaluedMap<String, String> extractHeaders(InProcResponse inProcResponse) {
         final CaseInsensitiveMap<String> headers = new CaseInsensitiveMap<>();
