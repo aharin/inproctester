@@ -11,7 +11,5 @@ public interface InProcResponse {
 
     String getHeader(String headerName);
 
-    String getCharacterEncoding();
-
     String getReason();
 }
