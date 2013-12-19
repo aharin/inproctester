@@ -22,13 +22,13 @@ import com.thoughtworks.inproctester.core.InProcResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public class HttpTesterAdaptor {
     static WebResponseData adaptResponse(InProcResponse inProcResponse) throws IOException {
         final List<NameValuePair> headers = new ArrayList<>();
-        Set<String> headerNames = inProcResponse.getHeaderNames();
+        Collection<String> headerNames = inProcResponse.getHeaderNames();
         for (String headerName : headerNames) {
             String headerValue = inProcResponse.getHeader(headerName);
             headers.add(new NameValuePair(headerName, headerValue));

@@ -25,10 +25,7 @@ import com.thoughtworks.inproctester.jetty.HttpAppTester;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.*;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class InPocessClientHandler extends TerminatingClientHandler {
     private final HttpAppTester w;
@@ -51,7 +48,7 @@ public class InPocessClientHandler extends TerminatingClientHandler {
 
     private InBoundHeaders getInBoundHeaders(InProcResponse inProcResponse) {
         InBoundHeaders headers = new InBoundHeaders();
-        Set<String> headerNames = inProcResponse.getHeaderNames();
+        Collection<String> headerNames = inProcResponse.getHeaderNames();
 
         for (String headerName : headerNames) {
             String headerValue = inProcResponse.getHeader(headerName);

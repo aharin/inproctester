@@ -17,8 +17,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public class InProcessClientExecutor implements ClientExecutor {
 
@@ -88,7 +88,7 @@ public class InProcessClientExecutor implements ClientExecutor {
 
     private MultivaluedMap<String, String> extractHeaders(InProcResponse inProcResponse) {
         final CaseInsensitiveMap<String> headers = new CaseInsensitiveMap<>();
-        Set<String> headerNames = inProcResponse.getHeaderNames();
+        Collection<String> headerNames = inProcResponse.getHeaderNames();
         for (String headerName : headerNames) {
             String headerValue = inProcResponse.getHeader(headerName);
             headers.add(headerName, headerValue);

@@ -1,13 +1,13 @@
 package com.thoughtworks.inproctester.core;
 
-import java.util.Set;
+import java.util.Collection;
 
 public interface InProcResponse {
     int getStatus();
 
     byte[] getContentBytes();
 
-    Set<String> getHeaderNames();
+    Collection<String> getHeaderNames();
 
     String getHeader(String headerName);
 

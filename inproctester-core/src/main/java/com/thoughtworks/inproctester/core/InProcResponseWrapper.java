@@ -16,6 +16,7 @@ package com.thoughtworks.inproctester.core;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Set;
 
 public class InProcResponseWrapper implements InProcResponse {
@@ -67,7 +68,7 @@ public class InProcResponseWrapper implements InProcResponse {
     }
 
     @Override
-    public Set<String> getHeaderNames() {
+    public Collection<String> getHeaderNames() {
         return inProcResponse.getHeaderNames();
     }
 

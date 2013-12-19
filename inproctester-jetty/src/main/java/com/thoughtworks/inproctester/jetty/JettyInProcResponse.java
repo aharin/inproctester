@@ -3,9 +3,7 @@ package com.thoughtworks.inproctester.jetty;
 import com.thoughtworks.inproctester.core.InProcResponse;
 import org.eclipse.jetty.http.HttpTester;
 
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
 
 public class JettyInProcResponse implements InProcResponse {
     private HttpTester.Response testerResponse;
@@ -25,13 +23,8 @@ public class JettyInProcResponse implements InProcResponse {
     }
 
     @Override
-    public Set<String> getHeaderNames() {
-        Set<String> headerNames = new HashSet<>();
-        Enumeration enumeration = testerResponse.getFieldNames();
-        while (enumeration.hasMoreElements()) {
-            headerNames.add(enumeration.nextElement().toString());
-        }
-        return headerNames;
+    public Collection<String> getHeaderNames() {
+        return testerResponse.getFieldNamesCollection();
     }
 
     @Override

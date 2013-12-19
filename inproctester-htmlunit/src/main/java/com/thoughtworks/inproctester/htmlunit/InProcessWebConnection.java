@@ -25,10 +25,7 @@ import com.thoughtworks.inproctester.core.InProcResponse;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.thoughtworks.inproctester.htmlunit.HttpTesterAdaptor.adaptRequest;
 import static com.thoughtworks.inproctester.htmlunit.HttpTesterAdaptor.adaptResponse;
@@ -57,7 +54,7 @@ public class InProcessWebConnection implements WebConnection {
 
     private void storeCookiesFromResponse(InProcRequest testerRequest, InProcResponse inProcResponse) {
         String requestHostName = testerRequest.getHeader("Host").split(":", 1)[0];
-        Set<String> headerNames = inProcResponse.getHeaderNames();
+        Collection<String> headerNames = inProcResponse.getHeaderNames();
         for (String headerName : headerNames) {
             if ("Set-Cookie".equalsIgnoreCase(headerName)) {
                 storeCookie(requestHostName, inProcResponse.getHeader(headerName));
@@ -85,7 +82,7 @@ public class InProcessWebConnection implements WebConnection {
     private void addCookiesToRequest(InProcRequest httpTester) {
         Set<Cookie> cookies = cookieManager.getCookies();
         if (!cookies.isEmpty()) {
-            List<String> cookieStrings = new ArrayList<String>();
+            List<String> cookieStrings = new ArrayList<>();
             for (Cookie cookie : cookies) {
                 cookieStrings.add(cookie.getName() + "=" + cookie.getValue());
             }
