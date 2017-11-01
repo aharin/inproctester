@@ -20,8 +20,13 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 
-public class UrlHelper {
+import com.thoughtworks.inproctester.core.exceptions.HostRetrievalException;
+import com.thoughtworks.inproctester.core.exceptions.UrlEncodingException;
 
+public class UrlHelper {
+	private UrlHelper() {
+	}
+	
     public static String getRequestPath(URI uri) {
         String path = uri.getRawPath();
         String query = uri.getRawQuery();
@@ -42,7 +47,7 @@ public class UrlHelper {
             URI uri = absoluteUrl.toURI();
             return getRequestHost(uri);
         } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+            throw new HostRetrievalException(e);
         }
     }
 
@@ -60,7 +65,7 @@ public class UrlHelper {
         try {
             return URLEncoder.encode(value, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            throw new UrlEncodingException(e);
         }
     }
 }
