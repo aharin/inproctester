@@ -45,7 +45,7 @@ public class InProcessWebConnection implements WebConnection {
         return new WebResponse(adaptResponse(processTesterRequest(adaptRequest(webRequest))), webRequest, 0);
     }
 
-    private InProcResponse processTesterRequest(InProcRequest inProcRequest) throws IOException {
+    private InProcResponse processTesterRequest(InProcRequest inProcRequest) {
         addCookiesToRequest(inProcRequest);
         InProcResponse inProcResponse = inProcConnection.getResponses(inProcRequest);
         storeCookiesFromResponse(inProcRequest, inProcResponse);
