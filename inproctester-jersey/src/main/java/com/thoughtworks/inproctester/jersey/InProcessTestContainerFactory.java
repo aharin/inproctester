@@ -20,6 +20,7 @@ import com.sun.jersey.test.framework.AppDescriptor;
 import com.sun.jersey.test.framework.WebAppDescriptor;
 import com.sun.jersey.test.framework.spi.container.TestContainer;
 import com.sun.jersey.test.framework.spi.container.TestContainerFactory;
+import com.thoughtworks.inproctester.jersey.exceptions.WebServerEventException;
 import com.thoughtworks.inproctester.jetty.HttpAppTester;
 
 import javax.servlet.Servlet;
@@ -28,6 +29,7 @@ import java.net.URI;
 import java.util.EventListener;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class InProcessTestContainerFactory implements TestContainerFactory {
@@ -74,7 +76,7 @@ public class InProcessTestContainerFactory implements TestContainerFactory {
                     .path(ad.getContextPath())
                     .build();
 
-            LOGGER.info("Creating Inprocess Web Container configured at the base URI " + this.baseUri);
+            LOGGER.log(Level.INFO, "Creating Inprocess Web Container configured at the base URI {}", this.baseUri);
             this.contextPath = getContextPath(ad);
             this.servletPath = getServletPath(ad);
 
@@ -91,21 +93,21 @@ public class InProcessTestContainerFactory implements TestContainerFactory {
         }
 
         private String getContextPath(WebAppDescriptor ad) {
-            String contextPath = ad.getContextPath() == null ? "/" : ad.getContextPath();
-            if (!contextPath.startsWith("/")) {
-                return ("/" + contextPath);
+            String descriptorContextPath = ad.getContextPath() == null ? "/" : ad.getContextPath();
+            if (!descriptorContextPath.startsWith("/")) {
+                return ("/" + descriptorContextPath);
             } else {
-                return contextPath;
+                return descriptorContextPath;
             }
 
         }
 
         private String getServletPath(WebAppDescriptor ad) {
-            String servletPath = ad.getServletPath() == null ? "/" : ad.getServletPath();
-            if (!servletPath.startsWith("/")) {
-                return ("/" + servletPath);
+            String descriptorServletPath = ad.getServletPath() == null ? "/" : ad.getServletPath();
+            if (!descriptorServletPath.startsWith("/")) {
+                return ("/" + descriptorServletPath);
             } else {
-                return servletPath;
+                return descriptorServletPath;
             }
 
         }
@@ -147,7 +149,7 @@ public class InProcessTestContainerFactory implements TestContainerFactory {
                     try {
                         httpServer.addEventListener(eventListener.newInstance());
                     } catch (InstantiationException | IllegalAccessException e) {
-                        throw new RuntimeException(e);
+                        throw new WebServerEventException(e);
                     }
                 }
             }

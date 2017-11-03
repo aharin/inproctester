@@ -120,6 +120,7 @@ public class InPocessClientHandler extends TerminatingClientHandler {
                 InPocessClientHandler.this.writeRequestEntity(ro, new RequestWriter.RequestEntityWriterListener() {
 
                     public void onRequestEntitySize(long size) throws IOException {
+                    	// Not yet implemented
                     }
 
                     public OutputStream onGetOutputStream() throws IOException {
