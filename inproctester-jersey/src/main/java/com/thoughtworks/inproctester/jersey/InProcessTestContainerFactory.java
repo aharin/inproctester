@@ -76,7 +76,7 @@ public class InProcessTestContainerFactory implements TestContainerFactory {
                     .path(ad.getContextPath())
                     .build();
 
-            LOGGER.log(Level.INFO, "Creating Inprocess Web Container configured at the base URI {}", this.baseUri);
+            LOGGER.log(Level.INFO, "Creating Inprocess Web Container configured at the base URI {0}", this.baseUri);
             this.contextPath = getContextPath(ad);
             this.servletPath = getServletPath(ad);
 
