@@ -20,13 +20,16 @@ import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.core.InProcResponse;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class HttpTesterAdaptor {
-    static WebResponseData adaptResponse(InProcResponse inProcResponse) throws IOException {
+	
+	private HttpTesterAdaptor() {
+	}
+	
+    static WebResponseData adaptResponse(InProcResponse inProcResponse) {
         final List<NameValuePair> headers = new ArrayList<>();
         Collection<String> headerNames = inProcResponse.getHeaderNames();
         for (String headerName : headerNames) {

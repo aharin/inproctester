@@ -20,16 +20,21 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public class CookieParser {
 
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd-MMM-yyyy HH:mm:ss zzz");
-
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd-MMM-yyyy HH:mm:ss Z", Locale.US);
+    private static final Logger LOGGER = LogManager.getLogger(CookieParser.class.getName());
 
     public Cookie parseCookie(String hostName, String rawCookie) {
         String[] cookieParts = rawCookie.split(";");
         String valuePart = cookieParts[0];
-        int idx = valuePart.indexOf("=");
+        int idx = valuePart.indexOf('=');
         String cookieName = valuePart.substring(0, idx);
         String cookieValue =  valuePart.substring(idx + 1, valuePart.length());
 
@@ -41,6 +46,11 @@ public class CookieParser {
                 try {
                     expiresDate = dateFormat.parse(expiresDateString);
                 } catch (ParseException ignored) {
+                	if (LOGGER.isDebugEnabled()) {
+                		LOGGER.debug("A problem occured while parsing some cookie: ", ignored);
+                	} else {
+                		LOGGER.error("A technical problem occured while parsing some cookies", ignored);
+                	}
                 }
             }
         }

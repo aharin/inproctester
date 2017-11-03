@@ -17,7 +17,8 @@ package com.thoughtworks.inproctester.core;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.Set;
+
+import com.thoughtworks.inproctester.core.exceptions.ContentRetrievalException;
 
 public class InProcResponseWrapper implements InProcResponse {
 
@@ -35,7 +36,7 @@ public class InProcResponseWrapper implements InProcResponse {
         try {
             return new String(getContentBytes(), getCharacterEncoding());
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            throw new ContentRetrievalException(e);
         }
     }
 

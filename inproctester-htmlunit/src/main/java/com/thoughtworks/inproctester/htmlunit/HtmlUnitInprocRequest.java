@@ -3,6 +3,7 @@ package com.thoughtworks.inproctester.htmlunit;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.core.UrlHelper;
+import com.thoughtworks.inproctester.htmlunit.exceptions.UriRetrievalException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,13 +32,13 @@ class HtmlUnitInProcRequest implements InProcRequest {
         try {
             return request.getUrl().toURI();
         } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+            throw new UriRetrievalException(e);
         }
     }
 
     @Override
     public String getContent() {
-        if (request.getRequestParameters().size() > 0) {
+        if (request.getRequestParameters().isEmpty()) {
             return new UrlEncodedContent(request.getRequestParameters()).generateFormDataAsString();
         }
         return request.getRequestBody();

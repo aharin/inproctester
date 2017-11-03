@@ -28,7 +28,7 @@ import java.util.Map;
 @Singleton
 public class TestApplication {
 
-    private Map<Integer, TestResource> resources = new HashMap<Integer, TestResource>();
+    private Map<Integer, TestResource> resources = new HashMap<>();
 
     @Context
     private UriInfo uriInfo;
