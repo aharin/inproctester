@@ -10,7 +10,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 public class ValidationFilter implements javax.servlet.Filter {
-	 
+
 	@Override
 	public void destroy() {
 		// Customise this
@@ -19,12 +19,11 @@ public class ValidationFilter implements javax.servlet.Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		chain.doFilter(new ValidatingHttpRequest( (HttpServletRequest)request ), response);
+		chain.doFilter(new ValidatingHttpRequest((HttpServletRequest) request), response);
 	}
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
-		// TODO Auto-generated method stub
-		
+		// Customize
 	}
-		}
+}
