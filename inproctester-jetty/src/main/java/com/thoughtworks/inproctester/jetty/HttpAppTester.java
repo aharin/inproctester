@@ -17,6 +17,9 @@ package com.thoughtworks.inproctester.jetty;
 import com.thoughtworks.inproctester.core.InProcConnection;
 import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.core.InProcResponse;
+import com.thoughtworks.inproctester.jetty.exceptions.HttpAppStartException;
+import com.thoughtworks.inproctester.jetty.exceptions.HttpAppStopException;
+
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.LocalConnector;
 import org.eclipse.jetty.server.Server;
@@ -32,6 +35,7 @@ import javax.servlet.Servlet;
 import java.util.EnumSet;
 import java.util.EventListener;
 import java.util.Map;
+import java.util.Set;
 
 public class HttpAppTester implements InProcConnection {
 
@@ -96,13 +100,13 @@ public class HttpAppTester implements InProcConnection {
     }
 
 
-    public void addFilter(Class<? extends Filter> filterClass, String pathSpec, EnumSet<DispatcherType> dispatches, Map<String, String> initParameters) {
-        FilterHolder servletHolder = context.addFilter(filterClass, pathSpec, dispatches);
+    public void addFilter(Class<? extends Filter> filterClass, String pathSpec, Set<DispatcherType> dispatches, Map<String, String> initParameters) {
+        FilterHolder servletHolder = context.addFilter(filterClass, pathSpec, EnumSet.copyOf( dispatches));
         servletHolder.setInitParameters(initParameters);
     }
 
-    public void addFilter(Class<? extends Filter> filterClass, String pathSpec, EnumSet<DispatcherType> dispatches) {
-        context.addFilter(filterClass, pathSpec, dispatches);
+    public void addFilter(Class<? extends Filter> filterClass, String pathSpec, Set<DispatcherType> dispatches) {
+        context.addFilter(filterClass, pathSpec, EnumSet.copyOf(dispatches));
     }
 
     public void addEventListener(EventListener listener) {
@@ -123,7 +127,7 @@ public class HttpAppTester implements InProcConnection {
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new HttpAppStartException(e);
         }
     }
 
@@ -133,7 +137,7 @@ public class HttpAppTester implements InProcConnection {
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new HttpAppStopException(e);
         }
     }
 

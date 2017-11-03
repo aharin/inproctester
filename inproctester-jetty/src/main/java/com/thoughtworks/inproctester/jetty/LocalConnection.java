@@ -17,6 +17,8 @@ package com.thoughtworks.inproctester.jetty;
 import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.core.InProcResponse;
 import com.thoughtworks.inproctester.core.UrlHelper;
+import com.thoughtworks.inproctester.jetty.exceptions.LocalConnectionResponseException;
+
 import org.eclipse.jetty.server.LocalConnector;
 import org.eclipse.jetty.http.HttpTester;
 
@@ -37,7 +39,7 @@ public class LocalConnection  {
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new LocalConnectionResponseException(e);
         }
     }
 
