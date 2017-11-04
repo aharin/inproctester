@@ -81,6 +81,7 @@ public class InProcessClientExecutor implements ClientExecutor {
     }
 
     public void close() throws Exception {
+    	// Not implemented yet
     }
 
     private InProcConnection routeToTesterApplication(URI requestUri) {

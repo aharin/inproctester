@@ -26,7 +26,7 @@ public class RestEasyClientInProcRequest implements InProcRequest {
 	private static final String REQUEST_ENTITY_WRITE_EXCEPTION_MESSAGE = "Unable to write from request entity";
 	
     private ClientRequest clientRequest;
-    private Map<String, String> headers = new HashMap<String, String>();
+    private Map<String, String> headers = new HashMap<>();
 
     public RestEasyClientInProcRequest(ClientRequest clientRequest) {
         this.clientRequest = clientRequest;
@@ -80,7 +80,7 @@ public class RestEasyClientInProcRequest implements InProcRequest {
     }
 
     private Map<String, String> asMap(MultivaluedMap<String, String> headers) {
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
         for (Map.Entry<String, List<String>> header : headers.entrySet()) {
             for (String v : header.getValue()) {
                 map.put(header.getKey(), v);
