@@ -19,15 +19,27 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestServlet extends HttpServlet {
+	
+	private static final long serialVersionUID = 8775172147016982644L;
+	private static final Logger LOGGER = Logger.getLogger(TestServlet.class.getName());
+	
+	private static final String REQUEST_RESPONSE_FAILURE_MSG_BASE = "The request / response interaction generated an exception";
+	
     @Override protected void doPut(
             HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().append(request.getReader().readLine());
+        try {
+        	response.getWriter().append(request.getReader().readLine());
+        } catch (IOException ex) {
+        	LOGGER.log(Level.FINE, REQUEST_RESPONSE_FAILURE_MSG_BASE, ex);
+        } 
     }
 
     @Override protected void doPost(
@@ -36,6 +48,11 @@ public class TestServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().append(request.getReader().readLine());
+        try {
+        	response.getWriter().append(request.getReader().readLine());
+        } catch (IOException ex) {
+        	LOGGER.log(Level.FINE, REQUEST_RESPONSE_FAILURE_MSG_BASE, ex);
+        }
+        
     }
 }
