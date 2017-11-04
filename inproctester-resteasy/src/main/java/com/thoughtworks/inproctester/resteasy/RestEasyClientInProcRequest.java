@@ -2,6 +2,10 @@ package com.thoughtworks.inproctester.resteasy;
 
 import com.thoughtworks.inproctester.core.InProcRequest;
 import com.thoughtworks.inproctester.core.UrlHelper;
+import com.thoughtworks.inproctester.resteasy.exceptions.RequestEntityWriteException;
+import com.thoughtworks.inproctester.resteasy.exceptions.RequestHostException;
+import com.thoughtworks.inproctester.resteasy.exceptions.UriRetrievalException;
+
 import org.jboss.resteasy.client.ClientRequest;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -13,8 +17,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RestEasyClientInProcRequest implements InProcRequest {
+	
+	private static final Logger LOGGER = Logger.getLogger(RestEasyClientInProcRequest.class.getName());
+	private static final String REQUEST_ENTITY_WRITE_EXCEPTION_MESSAGE = "Unable to write from request entity";
+	
     private ClientRequest clientRequest;
     private Map<String, String> headers = new HashMap<String, String>();
 
@@ -23,7 +33,7 @@ public class RestEasyClientInProcRequest implements InProcRequest {
         try {
             headers.put("Host", UrlHelper.getRequestHost(new URI(clientRequest.getUri())));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RequestHostException(e);
         }
         if (clientRequest.getBodyContentType() != null) {
             headers.put("Content-type", clientRequest.getBodyContentType().toString());
@@ -41,7 +51,7 @@ public class RestEasyClientInProcRequest implements InProcRequest {
         try {
             return new URI(clientRequest.getUri());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new UriRetrievalException(e);
         }
     }
 
@@ -50,7 +60,7 @@ public class RestEasyClientInProcRequest implements InProcRequest {
         try {
             return new String(writeRequestEntity(clientRequest), "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            throw new RequestEntityWriteException(e);
         }
     }
 
@@ -83,7 +93,7 @@ public class RestEasyClientInProcRequest implements InProcRequest {
     private byte[] writeRequestEntity(ClientRequest clientRequest) {
 
         if (clientRequest.getBody() != null && !clientRequest.getFormParameters().isEmpty())
-            throw new RuntimeException("You cannot send both form parameters and an entity body");
+            throw new RequestEntityWriteException("You cannot send both form parameters and an entity body");
 
         if (!clientRequest.getFormParameters().isEmpty()) {
             throw new UnsupportedOperationException("InProcessClientExecutpr doesn't support form parameters yet");
@@ -92,12 +102,13 @@ public class RestEasyClientInProcRequest implements InProcRequest {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         if (clientRequest.getBody() != null) {
             if ("GET".equals(clientRequest.getHttpMethod()))
-                throw new RuntimeException("A GET request cannot have a body.");
+                throw new RequestEntityWriteException("A GET request cannot have a body.");
 
             try {
                 clientRequest.writeRequestBody(clientRequest.getHeadersAsObjects(), baos);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+            	LOGGER.log(Level.FINE, REQUEST_ENTITY_WRITE_EXCEPTION_MESSAGE, e);
+                throw new RequestEntityWriteException(e);
             }
         }
 

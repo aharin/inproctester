@@ -19,9 +19,14 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class InProcessClientExecutor implements ClientExecutor {
-
+	
+	private static final Logger LOGGER = Logger.getLogger(InProcessClientExecutor.class.getName());
+	private static final String CONNECTION_RELEASE_FAILURE_MSG = "An exception occured while trying to release the connection";
+	
     private List<TesterRoute> testerRoutes = new ArrayList<>();
 
     public InProcessClientExecutor() {
@@ -63,7 +68,8 @@ public class InProcessClientExecutor implements ClientExecutor {
             public void performReleaseConnection() {
                 try {
                     stream.close();
-                } catch (Exception ignored) {
+                } catch (Exception ex) {
+                	LOGGER.log(Level.FINE,CONNECTION_RELEASE_FAILURE_MSG , ex);
                 }
             }
         }, this);
