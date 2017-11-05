@@ -26,7 +26,7 @@ import java.util.Map;
 @Path("/")
 public class TestApplication {
 
-    private static Map<Integer, TestResource> resources = new HashMap<Integer, TestResource>();
+    private static Map<Integer, TestResource> resources = new HashMap<>();
 
     @Context
     private UriInfo uriInfo;
