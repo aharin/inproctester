@@ -21,11 +21,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TestServlet extends HttpServlet {
 
-    public static Contact contact = new Contact();
+	private static final Logger LOGGER = Logger.getLogger(TestServlet.class.getName());
+	private static final String FORWARD_FAILURE_MESSAGE = "Unable to forward the request ";
+	private static final String REDIRECT_FAILURE_MESSAGE = "Failed to redirect from the request ";
+	
+    public static final Contact contact = new Contact();
     public static final String FLASH_MESSAGE_COOKIE_NAME = "FLASH_MESSAGE";
+    
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -37,7 +44,11 @@ public class TestServlet extends HttpServlet {
             resp.addCookie(cookie);
         }
         req.setAttribute("contact", contact);
-        getServletContext().getRequestDispatcher("/test.ftl").forward(req, resp);
+        try {
+        	getServletContext().getRequestDispatcher("/test.ftl").forward(req, resp);
+        } catch (ServletException | IOException ex) {
+        	LOGGER.log(Level.FINE, FORWARD_FAILURE_MESSAGE, ex);
+        }
     }
 
     private Cookie getCookie(HttpServletRequest req, String cookieName) {
@@ -58,7 +69,11 @@ public class TestServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         contact.setName(req.getParameter("contactName"));
         resp.addCookie(new Cookie(FLASH_MESSAGE_COOKIE_NAME, "Success"));
-        resp.sendRedirect(req.getContextPath() + "/contacts/1");
+        try {
+        	resp.sendRedirect(req.getContextPath() + "/contacts/1");
+        } catch (IOException ex) {
+        	LOGGER.log(Level.FINE, REDIRECT_FAILURE_MESSAGE, ex);
+        }
     }
 }
 
