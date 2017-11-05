@@ -3,14 +3,26 @@
 Application 2.3//EN"
         "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
-    <servlet>
-        <servlet-name>TestServlet</servlet-name>
-        <servlet-class>
-            com.thoughtworks.inproctester.jetty.testapp.TestServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>TestServlet</servlet-name>
-        <url-pattern>/*</url-pattern>
-    </servlet-mapping>
+	<servlet>
+		<servlet-name>TestServlet</servlet-name>
+		<servlet-class>
+			com.thoughtworks.inproctester.jetty.testapp.TestServlet
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TestServlet</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+
+	<filter>
+		<filter-name>ValidationFilter</filter-name>
+		<filter-class>com.thoughtworks.inproctester.jetty.testapp.validation.ValidationFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>ValidationFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
 </web-app>
