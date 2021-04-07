@@ -32,7 +32,7 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-io</artifactId>
-            <version>9.1.0.v20131115</version>
+            <version>10.0.2</version>
         </dependency>
          <dependency>
             <groupId>javax.servlet</groupId>
